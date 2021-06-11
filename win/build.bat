@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set files=sokol_app sokol_gfx sokol_time
+set files=sokol_app sokol_gfx sokol_time sokol_audio
 
 (for %%a in (%files%) do (
 echo Compiling %%a...

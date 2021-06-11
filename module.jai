@@ -1,14 +1,16 @@
 Sokol_Modules :: enum_flags {
-    App  :: 0x1;
-    Gfx  :: 0x2;
-    Time :: 0x4;
-    All  :: Sokol_Modules.App | .Gfx | .Time;
+    App;
+    Gfx;
+    Time;
+    Audio;
+    All  :: Sokol_Modules.App | .Gfx | .Time | .Audio;
 }
 
 #module_parameters(modules := Sokol_Modules.All);
 
 #if modules & .App   #load "sokol_app.jai";
 #if modules & .Time  #load "sokol_time.jai";
+#if modules & .Audio #load "sokol_audio.jai";
 
 #if modules & .Gfx {
     #load "sokol_gfx.jai";
