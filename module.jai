@@ -5,7 +5,7 @@ Sokol_Modules :: enum_flags {
     Audio;
 }
 
-#module_parameters(modules := Sokol_Modules.All);
+#module_parameters(modules := Sokol_Modules.App | .Gfx | .Time | .Audio);
 
 #if modules & .App   #load "sokol_app.jai";
 #if modules & .Time  #load "sokol_time.jai";
