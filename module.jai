@@ -3,7 +3,6 @@ Sokol_Modules :: enum_flags {
     Gfx;
     Time;
     Audio;
-    All  :: Sokol_Modules.App | .Gfx | .Time | .Audio;
 }
 
 #module_parameters(modules := Sokol_Modules.All);
