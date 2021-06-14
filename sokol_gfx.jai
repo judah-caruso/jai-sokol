@@ -196,7 +196,7 @@ sg_image_type :: enum u32 {
 }
 
 sg_sampler_type :: enum u32 {
-    _DEFAULT;  /* value 0 reserved for default-init */
+    _DEFAULT; /* value 0 reserved for default-init */
     FLOAT;
     SINT;
     UINT;
@@ -487,7 +487,7 @@ sg_image_desc :: struct {
 sg_shader_attr_desc :: struct {
     name      : *u8; // GLSL vertex attribute name (only strictly required for GLES2)
     sem_name  : *u8; // HLSL semantic name
-    sem_index : s32;   // HLSL semantic index
+    sem_index : s32; // HLSL semantic index
 }
 
 sg_shader_uniform_desc :: struct {
@@ -611,7 +611,7 @@ sg_pipeline_desc :: struct {
 sg_pass_attachment_desc :: struct {
     image     : sg_image;
     mip_level : s32;
-    slice     : s32;      /* cube texture: face; array texture: layer; 3D texture: slice */
+    slice     : s32; /* cube texture: face; array texture: layer; 3D texture: slice */
 }
 
 sg_pass_desc :: struct {
@@ -637,15 +637,15 @@ sg_trace_hooks :: struct {
     destroy_pass                : (sg_pass, *void)                           #c_call;
     update_buffer               : (sg_buffer, *sg_range, *void)              #c_call;
     update_image                : (sg_image, *sg_image_data, *void)          #c_call;
-    append_buffer               : (sg_buffer, *sg_range, s32, *void)       #c_call;
-    begin_default_pass          : (*sg_pass_action, s32, s32, *void)     #c_call;
+    append_buffer               : (sg_buffer, *sg_range, s32, *void)         #c_call;
+    begin_default_pass          : (*sg_pass_action, s32, s32, *void)         #c_call;
     begin_pass                  : (sg_pass, *sg_pass_action, *void)          #c_call;
-    apply_viewport              : (s32, s32, s32, s32, bool, *void)  #c_call;
-    apply_scissor_rect          : (s32, s32, s32, s32, bool, *void)  #c_call;
+    apply_viewport              : (s32, s32, s32, s32, bool, *void)          #c_call;
+    apply_scissor_rect          : (s32, s32, s32, s32, bool, *void)          #c_call;
     apply_pipeline              : (sg_pipeline, *void)                       #c_call;
     apply_bindings              : (*sg_bindings, *void)                      #c_call;
-    apply_uniforms              : (sg_shader_stage, s32, *sg_range, *void) #c_call;
-    draw                        : (s32, s32, s32, *void)               #c_call;
+    apply_uniforms              : (sg_shader_stage, s32, *sg_range, *void)   #c_call;
+    draw                        : (s32, s32, s32, *void)                     #c_call;
     end_pass                    : (*void)                                    #c_call;
     commit                      : (*void)                                    #c_call;
     alloc_buffer                : (sg_buffer, *void)                         #c_call;
@@ -673,7 +673,7 @@ sg_trace_hooks :: struct {
     fail_shader                 : (sg_shader, *void)                         #c_call;
     fail_pipeline               : (sg_pipeline, *void)                       #c_call;
     fail_pass                   : (sg_pass, *void)                           #c_call;
-    push_debug_group            : (*u8, *void)                           #c_call;
+    push_debug_group            : (*u8, *void)                               #c_call;
     pop_debug_group             : (*void)                                    #c_call;
     err_buffer_pool_exhausted   : (*void)                                    #c_call;
     err_image_pool_exhausted    : (*void)                                    #c_call;
@@ -696,19 +696,19 @@ sg_buffer_info :: struct {
     slot               : sg_slot_info; /* resource pool slot info */
     update_frame_index : u32;          /* frame index of last sg_update_buffer() */
     append_frame_index : u32;          /* frame index of last sg_append_buffer() */
-    append_pos         : s32;        /* current position in buffer for sg_append_buffer() */
+    append_pos         : s32;          /* current position in buffer for sg_append_buffer() */
     append_overflow    : bool;         /* is buffer in overflow state (due to sg_append_buffer) */
-    num_slots          : s32;        /* number of renaming-slots for dynamically updated buffers */
-    active_slot        : s32;        /* currently active write-slot for dynamically updated buffers */
+    num_slots          : s32;          /* number of renaming-slots for dynamically updated buffers */
+    active_slot        : s32;          /* currently active write-slot for dynamically updated buffers */
 }
 
 sg_image_info :: struct {
     slot            : sg_slot_info; /* resource pool slot info */
     upd_frame_index : u32;          /* frame index of last sg_update_image() */
-    num_slots       : s32;        /* number of renaming-slots for dynamically updated images */
-    active_slot     : s32;        /* currently active write-slot for dynamically updated images */
-    width           : s32;        /* image width */
-    height          : s32;        /* image height */
+    num_slots       : s32;          /* number of renaming-slots for dynamically updated images */
+    active_slot     : s32;          /* currently active write-slot for dynamically updated images */
+    width           : s32;          /* image width */
+    height          : s32;          /* image height */
 }
 
 sg_shader_info :: struct {
@@ -747,12 +747,12 @@ sg_d3d11_context_desc :: struct {
 }
 
 sg_wgpu_context_desc :: struct {
-    device                         : *void;                     /* WGPUDevice */
-    render_view_cb                 : ()      -> *void #c_call;  /* returns WGPUTextureView */
+    device                         : *void;                    /* WGPUDevice */
+    render_view_cb                 : ()      -> *void #c_call; /* returns WGPUTextureView */
     render_view_userdata_cb        : (*void) -> *void #c_call;
-    resolve_view_cb                : ()      -> *void #c_call;  /* returns WGPUTextureView */
+    resolve_view_cb                : ()      -> *void #c_call; /* returns WGPUTextureView */
     resolve_view_userdata_cb       : (*void) -> *void #c_call;
-    depth_stencil_view_cb          : ()      -> *void #c_call;  /* returns WGPUTextureView, must be WGPUTextureFormat_Depth24Plus8 */
+    depth_stencil_view_cb          : ()      -> *void #c_call; /* returns WGPUTextureView, must be WGPUTextureFormat_Depth24Plus8 */
     depth_stencil_view_userdata_cb : (*void) -> *void #c_call;
     user_data                      : *void;
 }
