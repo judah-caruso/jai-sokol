@@ -42,4 +42,3 @@ Sokol_Modules :: enum_flags {
         }
     }
 }
-

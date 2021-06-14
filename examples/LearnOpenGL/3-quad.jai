@@ -71,7 +71,7 @@ init :: () {
         desc.data  = range;
         desc.label = "quad-indices";
 
-        // state.bindings.index_buffer = sg_make_buffer(*desc);
+        state.bindings.index_buffer = sg_make_buffer(*desc);
     }
 
     {
