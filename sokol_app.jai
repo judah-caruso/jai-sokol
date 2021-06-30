@@ -286,67 +286,67 @@ sapp_html5_fetch_request :: struct {
     user_data          : *void;                                /* optional userdata pointer */
 }
 
-sapp_isvalid      :: () -> bool  #c_call #foreign sokol_app;
-sapp_width        :: () -> s32   #c_call #foreign sokol_app;
-sapp_widthf       :: () -> float #c_call #foreign sokol_app;
-sapp_height       :: () -> s32   #c_call #foreign sokol_app;
-sapp_heightf      :: () -> float #c_call #foreign sokol_app;
-sapp_color_format :: () -> s32   #c_call #foreign sokol_app;
-sapp_depth_format :: () -> s32   #c_call #foreign sokol_app;
-sapp_sample_count :: () -> s32   #c_call #foreign sokol_app;
+sapp_isvalid      :: () -> bool  #foreign sokol_app;
+sapp_width        :: () -> s32   #foreign sokol_app;
+sapp_widthf       :: () -> float #foreign sokol_app;
+sapp_height       :: () -> s32   #foreign sokol_app;
+sapp_heightf      :: () -> float #foreign sokol_app;
+sapp_color_format :: () -> s32   #foreign sokol_app;
+sapp_depth_format :: () -> s32   #foreign sokol_app;
+sapp_sample_count :: () -> s32   #foreign sokol_app;
 
-sapp_high_dpi          :: () -> bool   #c_call #foreign sokol_app;
-sapp_dpi_scale         :: () -> float  #c_call #foreign sokol_app;
-sapp_show_keyboard     :: (show: bool) #c_call #foreign sokol_app;
-sapp_keyboard_shown    :: () -> bool   #c_call #foreign sokol_app;
-sapp_is_fullscreen     :: () -> bool   #c_call #foreign sokol_app;
-sapp_toggle_fullscreen :: ()           #c_call #foreign sokol_app;
-sapp_show_mouse        :: (show: bool) #c_call #foreign sokol_app;
-sapp_mouse_shown       :: () -> bool   #c_call #foreign sokol_app;
-sapp_lock_mouse        :: (lock: bool) #c_call #foreign sokol_app;
-sapp_mouse_locked      :: () -> bool   #c_call #foreign sokol_app;
+sapp_high_dpi          :: () -> bool   #foreign sokol_app;
+sapp_dpi_scale         :: () -> float  #foreign sokol_app;
+sapp_show_keyboard     :: (show: bool) #foreign sokol_app;
+sapp_keyboard_shown    :: () -> bool   #foreign sokol_app;
+sapp_is_fullscreen     :: () -> bool   #foreign sokol_app;
+sapp_toggle_fullscreen :: ()           #foreign sokol_app;
+sapp_show_mouse        :: (show: bool) #foreign sokol_app;
+sapp_mouse_shown       :: () -> bool   #foreign sokol_app;
+sapp_lock_mouse        :: (lock: bool) #foreign sokol_app;
+sapp_mouse_locked      :: () -> bool   #foreign sokol_app;
 
-sapp_userdata      :: () -> *void     #c_call #foreign sokol_app;
-sapp_query_desc    :: () -> sapp_desc #c_call #foreign sokol_app;
-sapp_request_quit  :: ()              #c_call #foreign sokol_app;
-sapp_cancel_quit   :: ()              #c_call #foreign sokol_app;
-sapp_quit          :: ()              #c_call #foreign sokol_app;
-sapp_consume_event :: ()              #c_call #foreign sokol_app;
+sapp_userdata      :: () -> *void     #foreign sokol_app;
+sapp_query_desc    :: () -> sapp_desc #foreign sokol_app;
+sapp_request_quit  :: ()              #foreign sokol_app;
+sapp_cancel_quit   :: ()              #foreign sokol_app;
+sapp_quit          :: ()              #foreign sokol_app;
+sapp_consume_event :: ()              #foreign sokol_app;
 
-sapp_frame_count           :: () -> u64                    #c_call #foreign sokol_app;
-sapp_set_clipboard_string  :: (str: *u8)                   #c_call #foreign sokol_app;
-sapp_get_clipboard_string  :: () -> *u8                    #c_call #foreign sokol_app;
-sapp_set_window_title      :: (str: *u8)                   #c_call #foreign sokol_app;
-sapp_set_icon              :: (icon_desc: *sapp_icon_desc) #c_call #foreign sokol_app;
-sapp_get_num_dropped_files :: () -> s32                    #c_call #foreign sokol_app;
-sapp_get_dropped_file_path :: (index: s32) -> *u8          #c_call #foreign sokol_app;
+sapp_frame_count           :: () -> u64                    #foreign sokol_app;
+sapp_set_clipboard_string  :: (str: *u8)                   #foreign sokol_app;
+sapp_get_clipboard_string  :: () -> *u8                    #foreign sokol_app;
+sapp_set_window_title      :: (str: *u8)                   #foreign sokol_app;
+sapp_set_icon              :: (icon_desc: *sapp_icon_desc) #foreign sokol_app;
+sapp_get_num_dropped_files :: () -> s32                    #foreign sokol_app;
+sapp_get_dropped_file_path :: (index: s32) -> *u8          #foreign sokol_app;
 
-sapp_run   :: (desc: *sapp_desc) #c_call #foreign sokol_app;
-sapp_gles2 :: () -> bool         #c_call #foreign sokol_app;
+sapp_run   :: (desc: *sapp_desc) #foreign sokol_app;
+sapp_gles2 :: () -> bool         #foreign sokol_app;
 
-sapp_html5_ask_leave_site        :: (ask: bool)                          #c_call #foreign sokol_app;
-sapp_html5_get_dropped_file_size :: (index: s32) -> u32                  #c_call #foreign sokol_app;
-sapp_html5_fetch_dropped_file    :: (request: *sapp_html5_fetch_request) #c_call #foreign sokol_app;
+sapp_html5_ask_leave_site        :: (ask: bool)                          #foreign sokol_app;
+sapp_html5_get_dropped_file_size :: (index: s32) -> u32                  #foreign sokol_app;
+sapp_html5_fetch_dropped_file    :: (request: *sapp_html5_fetch_request) #foreign sokol_app;
 
-sapp_metal_get_device                :: () -> *void #c_call #foreign sokol_app;
-sapp_metal_get_renderpass_descriptor :: () -> *void #c_call #foreign sokol_app;
-sapp_metal_get_drawable              :: () -> *void #c_call #foreign sokol_app;
-sapp_macos_get_window                :: () -> *void #c_call #foreign sokol_app;
-sapp_ios_get_window                  :: () -> *void #c_call #foreign sokol_app;
+sapp_metal_get_device                :: () -> *void #foreign sokol_app;
+sapp_metal_get_renderpass_descriptor :: () -> *void #foreign sokol_app;
+sapp_metal_get_drawable              :: () -> *void #foreign sokol_app;
+sapp_macos_get_window                :: () -> *void #foreign sokol_app;
+sapp_ios_get_window                  :: () -> *void #foreign sokol_app;
 
-sapp_d3d11_get_device             :: () -> *void #c_call #foreign sokol_app;
-sapp_d3d11_get_device_context     :: () -> *void #c_call #foreign sokol_app;
-sapp_d3d11_get_swap_chain         :: () -> *void #c_call #foreign sokol_app;
-sapp_d3d11_get_render_target_view :: () -> *void #c_call #foreign sokol_app;
-sapp_d3d11_get_depth_stencil_view :: () -> *void #c_call #foreign sokol_app;
-sapp_win32_get_hwnd               :: () -> *void #c_call #foreign sokol_app;
+sapp_d3d11_get_device             :: () -> *void #foreign sokol_app;
+sapp_d3d11_get_device_context     :: () -> *void #foreign sokol_app;
+sapp_d3d11_get_swap_chain         :: () -> *void #foreign sokol_app;
+sapp_d3d11_get_render_target_view :: () -> *void #foreign sokol_app;
+sapp_d3d11_get_depth_stencil_view :: () -> *void #foreign sokol_app;
+sapp_win32_get_hwnd               :: () -> *void #foreign sokol_app;
 
-sapp_wgpu_get_device             :: () -> *void #c_call #foreign sokol_app;
-sapp_wgpu_get_render_view        :: () -> *void #c_call #foreign sokol_app;
-sapp_wgpu_get_resolve_view       :: () -> *void #c_call #foreign sokol_app;
-sapp_wgpu_get_depth_stencil_view :: () -> *void #c_call #foreign sokol_app;
+sapp_wgpu_get_device             :: () -> *void #foreign sokol_app;
+sapp_wgpu_get_render_view        :: () -> *void #foreign sokol_app;
+sapp_wgpu_get_resolve_view       :: () -> *void #foreign sokol_app;
+sapp_wgpu_get_depth_stencil_view :: () -> *void #foreign sokol_app;
 
-sapp_android_get_native_activity :: () -> *void #c_call #foreign sokol_app;
+sapp_android_get_native_activity :: () -> *void #foreign sokol_app;
 
 #if OS == .WINDOWS {
     #foreign_system_library "d3d11";
