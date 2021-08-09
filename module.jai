@@ -1,15 +1,21 @@
+#scope_export;
 Sokol_Modules :: enum_flags {
     App;
     Gfx;
     Time;
     Audio;
+    Color;
+    DebugText;
 }
 
-#module_parameters(modules := Sokol_Modules.App | .Gfx | .Time | .Audio);
+#module_parameters(modules := Sokol_Modules.App | .Gfx | .Time | .Audio | .Color | .DebugText);
 
-#if modules & .App   #load "sokol_app.jai";
-#if modules & .Time  #load "sokol_time.jai";
-#if modules & .Audio #load "sokol_audio.jai";
+#scope_module;
+#if modules & .App       #load "sokol_app.jai";
+#if modules & .Time      #load "sokol_time.jai";
+#if modules & .Audio     #load "sokol_audio.jai";
+#if modules & .DebugText #load "sokol_debugtext.jai";
+#if modules & .Color     #load "sokol_color.jai";
 
 #if modules & .Gfx {
     #load "sokol_gfx.jai";
@@ -41,3 +47,5 @@ Sokol_Modules :: enum_flags {
         }
     }
 }
+
+#load "c.jai";

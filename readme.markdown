@@ -6,7 +6,7 @@
 
 ```sh
 git clone --recursive https://github.com/judah-caruso/jai-sokol Sokol
-cd Sokol/win && build.bat
+cd Sokol/your_platform && build.bat
 ```
 
 Sokol can be configured by modifying the `Sokol/c/config.inc` file.
