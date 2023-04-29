@@ -8,27 +8,122 @@
 
 SOKOL_FETCH_INCLUDED :: 1;
 
+sfetch_log_item_t :: enum u32 {
+    OK                                                    :: 0;
+    MALLOC_FAILED                                         :: 1;
+    FILE_PATH_UTF8_DECODING_FAILED                        :: 2;
+    SEND_QUEUE_FULL                                       :: 3;
+    REQUEST_CHANNEL_INDEX_TOO_BIG                         :: 4;
+    REQUEST_PATH_IS_NULL                                  :: 5;
+    REQUEST_PATH_TOO_LONG                                 :: 6;
+    REQUEST_CALLBACK_MISSING                              :: 7;
+    REQUEST_CHUNK_SIZE_GREATER_BUFFER_SIZE                :: 8;
+    REQUEST_USERDATA_PTR_IS_SET_BUT_USERDATA_SIZE_IS_NULL :: 9;
+    REQUEST_USERDATA_PTR_IS_NULL_BUT_USERDATA_SIZE_IS_NOT :: 10;
+    REQUEST_USERDATA_SIZE_TOO_BIG                         :: 11;
+    CLAMPING_NUM_CHANNELS_TO_MAX_CHANNELS                 :: 12;
+    REQUEST_POOL_EXHAUSTED                                :: 13;
+    SFETCH_LOGITEM_OK                                                    :: OK;
+    SFETCH_LOGITEM_MALLOC_FAILED                                         :: MALLOC_FAILED;
+    SFETCH_LOGITEM_FILE_PATH_UTF8_DECODING_FAILED                        :: FILE_PATH_UTF8_DECODING_FAILED;
+    SFETCH_LOGITEM_SEND_QUEUE_FULL                                       :: SEND_QUEUE_FULL;
+    SFETCH_LOGITEM_REQUEST_CHANNEL_INDEX_TOO_BIG                         :: REQUEST_CHANNEL_INDEX_TOO_BIG;
+    SFETCH_LOGITEM_REQUEST_PATH_IS_NULL                                  :: REQUEST_PATH_IS_NULL;
+    SFETCH_LOGITEM_REQUEST_PATH_TOO_LONG                                 :: REQUEST_PATH_TOO_LONG;
+    SFETCH_LOGITEM_REQUEST_CALLBACK_MISSING                              :: REQUEST_CALLBACK_MISSING;
+    SFETCH_LOGITEM_REQUEST_CHUNK_SIZE_GREATER_BUFFER_SIZE                :: REQUEST_CHUNK_SIZE_GREATER_BUFFER_SIZE;
+    SFETCH_LOGITEM_REQUEST_USERDATA_PTR_IS_SET_BUT_USERDATA_SIZE_IS_NULL :: REQUEST_USERDATA_PTR_IS_SET_BUT_USERDATA_SIZE_IS_NULL;
+    SFETCH_LOGITEM_REQUEST_USERDATA_PTR_IS_NULL_BUT_USERDATA_SIZE_IS_NOT :: REQUEST_USERDATA_PTR_IS_NULL_BUT_USERDATA_SIZE_IS_NOT;
+    SFETCH_LOGITEM_REQUEST_USERDATA_SIZE_TOO_BIG                         :: REQUEST_USERDATA_SIZE_TOO_BIG;
+    SFETCH_LOGITEM_CLAMPING_NUM_CHANNELS_TO_MAX_CHANNELS                 :: CLAMPING_NUM_CHANNELS_TO_MAX_CHANNELS;
+    SFETCH_LOGITEM_REQUEST_POOL_EXHAUSTED                                :: REQUEST_POOL_EXHAUSTED;
+}
+
+/*
+sfetch_logger_t
+
+Used in sfetch_desc_t to provide a custom logging and error reporting
+callback to sokol-fetch.
+*/
+sfetch_logger_t :: struct {
+    func:      #type (tag: *u8, log_level: u32, log_item_id: u32, message_or_null: *u8, line_nr: u32, filename_or_null: *u8, user_data: *void) -> void #c_call;
+
+    user_data: *void;
+}
+#run {
+    instance: sfetch_logger_t;
+    assert(((cast(*void)(*instance.func)) - cast(*void)(*instance)) == 0, "sfetch_logger_t.func has unexpected offset % instead of 0", ((cast(*void)(*instance.func)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_logger_t.func)) == 8, "sfetch_logger_t.func has unexpected size % instead of 8", size_of(type_of(sfetch_logger_t.func)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 8, "sfetch_logger_t.user_data has unexpected offset % instead of 8", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_logger_t.user_data)) == 8, "sfetch_logger_t.user_data has unexpected size % instead of 8", size_of(type_of(sfetch_logger_t.user_data)));
+    assert(size_of(sfetch_logger_t) == 16, "sfetch_logger_t has size % instead of 16", size_of(sfetch_logger_t));
+}
+
+/*
+sfetch_range_t
+
+A pointer-size pair struct to pass memory ranges into and out of sokol-fetch.
+When initialized from a value type (array or struct) you can use the
+SFETCH_RANGE() helper macro to build an sfetch_range_t struct.
+*/
+sfetch_range_t :: struct {
+    ptr:  *void;
+    size: size_t;
+}
+#run {
+    instance: sfetch_range_t;
+    assert(((cast(*void)(*instance.ptr)) - cast(*void)(*instance)) == 0, "sfetch_range_t.ptr has unexpected offset % instead of 0", ((cast(*void)(*instance.ptr)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_range_t.ptr)) == 8, "sfetch_range_t.ptr has unexpected size % instead of 8", size_of(type_of(sfetch_range_t.ptr)));
+    assert(((cast(*void)(*instance.size)) - cast(*void)(*instance)) == 8, "sfetch_range_t.size has unexpected offset % instead of 8", ((cast(*void)(*instance.size)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_range_t.size)) == 8, "sfetch_range_t.size has unexpected size % instead of 8", size_of(type_of(sfetch_range_t.size)));
+    assert(size_of(sfetch_range_t) == 16, "sfetch_range_t has size % instead of 16", size_of(sfetch_range_t));
+}
+
+/*
+sfetch_allocator_t
+
+Used in sfetch_desc_t to provide custom memory-alloc and -free functions
+to sokol_fetch.h. If memory management should be overridden, both the
+alloc and free function must be provided (e.g. it's not valid to
+override one function but not the other).
+*/
+sfetch_allocator_t :: struct {
+    alloc:     #type (size: size_t, user_data: *void) -> *void #c_call;
+    free:      #type (ptr: *void, user_data: *void) -> void #c_call;
+    user_data: *void;
+}
+#run {
+    instance: sfetch_allocator_t;
+    assert(((cast(*void)(*instance.alloc)) - cast(*void)(*instance)) == 0, "sfetch_allocator_t.alloc has unexpected offset % instead of 0", ((cast(*void)(*instance.alloc)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_allocator_t.alloc)) == 8, "sfetch_allocator_t.alloc has unexpected size % instead of 8", size_of(type_of(sfetch_allocator_t.alloc)));
+    assert(((cast(*void)(*instance.free)) - cast(*void)(*instance)) == 8, "sfetch_allocator_t.free has unexpected offset % instead of 8", ((cast(*void)(*instance.free)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_allocator_t.free)) == 8, "sfetch_allocator_t.free has unexpected size % instead of 8", size_of(type_of(sfetch_allocator_t.free)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 16, "sfetch_allocator_t.user_data has unexpected offset % instead of 16", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_allocator_t.user_data)) == 8, "sfetch_allocator_t.user_data has unexpected size % instead of 8", size_of(type_of(sfetch_allocator_t.user_data)));
+    assert(size_of(sfetch_allocator_t) == 24, "sfetch_allocator_t has size % instead of 24", size_of(sfetch_allocator_t));
+}
+
 /* configuration values for sfetch_setup() */
 sfetch_desc_t :: struct {
-    _start_canary: u32;
-    max_requests:  u32; /* max number of active requests across all channels, default is 128 */
-    num_channels:  u32; /* number of channels to fetch requests in parallel, default is 1 */
-    num_lanes:     u32; /* max number of requests active on the same channel, default is 1 */
-    _end_canary:   u32;
+    max_requests: u32; // max number of active requests across all channels (default: 128)
+    num_channels: u32; // number of channels to fetch requests in parallel (default: 1)
+    num_lanes:    u32; // max number of requests active on the same channel (default: 1)
+    allocator:    sfetch_allocator_t; // optional memory allocation overrides (default: malloc/free)
+    logger:       sfetch_logger_t; // optional log function overrides (default: NO LOGGING!)
 }
 #run {
     instance: sfetch_desc_t;
-    assert(((cast(*void)(*instance._start_canary)) - cast(*void)(*instance)) == 0, "sfetch_desc_t._start_canary has unexpected offset % instead of 0", ((cast(*void)(*instance._start_canary)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_desc_t._start_canary)) == 4, "sfetch_desc_t._start_canary has unexpected size % instead of 4", size_of(type_of(sfetch_desc_t._start_canary)));
-    assert(((cast(*void)(*instance.max_requests)) - cast(*void)(*instance)) == 4, "sfetch_desc_t.max_requests has unexpected offset % instead of 4", ((cast(*void)(*instance.max_requests)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.max_requests)) - cast(*void)(*instance)) == 0, "sfetch_desc_t.max_requests has unexpected offset % instead of 0", ((cast(*void)(*instance.max_requests)) - cast(*void)(*instance)));
     assert(size_of(type_of(sfetch_desc_t.max_requests)) == 4, "sfetch_desc_t.max_requests has unexpected size % instead of 4", size_of(type_of(sfetch_desc_t.max_requests)));
-    assert(((cast(*void)(*instance.num_channels)) - cast(*void)(*instance)) == 8, "sfetch_desc_t.num_channels has unexpected offset % instead of 8", ((cast(*void)(*instance.num_channels)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.num_channels)) - cast(*void)(*instance)) == 4, "sfetch_desc_t.num_channels has unexpected offset % instead of 4", ((cast(*void)(*instance.num_channels)) - cast(*void)(*instance)));
     assert(size_of(type_of(sfetch_desc_t.num_channels)) == 4, "sfetch_desc_t.num_channels has unexpected size % instead of 4", size_of(type_of(sfetch_desc_t.num_channels)));
-    assert(((cast(*void)(*instance.num_lanes)) - cast(*void)(*instance)) == 12, "sfetch_desc_t.num_lanes has unexpected offset % instead of 12", ((cast(*void)(*instance.num_lanes)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.num_lanes)) - cast(*void)(*instance)) == 8, "sfetch_desc_t.num_lanes has unexpected offset % instead of 8", ((cast(*void)(*instance.num_lanes)) - cast(*void)(*instance)));
     assert(size_of(type_of(sfetch_desc_t.num_lanes)) == 4, "sfetch_desc_t.num_lanes has unexpected size % instead of 4", size_of(type_of(sfetch_desc_t.num_lanes)));
-    assert(((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)) == 16, "sfetch_desc_t._end_canary has unexpected offset % instead of 16", ((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_desc_t._end_canary)) == 4, "sfetch_desc_t._end_canary has unexpected size % instead of 4", size_of(type_of(sfetch_desc_t._end_canary)));
-    assert(size_of(sfetch_desc_t) == 20, "sfetch_desc_t has size % instead of 20", size_of(sfetch_desc_t));
+    assert(((cast(*void)(*instance.allocator)) - cast(*void)(*instance)) == 16, "sfetch_desc_t.allocator has unexpected offset % instead of 16", ((cast(*void)(*instance.allocator)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_desc_t.allocator)) == 24, "sfetch_desc_t.allocator has unexpected size % instead of 24", size_of(type_of(sfetch_desc_t.allocator)));
+    assert(((cast(*void)(*instance.logger)) - cast(*void)(*instance)) == 40, "sfetch_desc_t.logger has unexpected offset % instead of 40", ((cast(*void)(*instance.logger)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_desc_t.logger)) == 16, "sfetch_desc_t.logger has unexpected size % instead of 16", size_of(type_of(sfetch_desc_t.logger)));
+    assert(size_of(sfetch_desc_t) == 56, "sfetch_desc_t has size % instead of 56", size_of(sfetch_desc_t));
 }
 
 /* a request handle to identify an active fetch request, returned by sfetch_send() */
@@ -63,22 +158,21 @@ sfetch_error_t :: enum u32 {
 
 /* the response struct passed to the response callback */
 sfetch_response_t :: struct {
-    handle:         sfetch_handle_t; /* request handle this response belongs to */
-    dispatched:     bool; /* true when request is in DISPATCHED state (lane has been assigned) */
-    fetched:        bool; /* true when request is in FETCHED state (fetched data is available) */
-    paused:         bool; /* request is currently in paused state */
-    finished:       bool; /* this is the last response for this request */
-    failed:         bool; /* request has failed (always set together with 'finished') */
-    cancelled:      bool; /* request was cancelled (always set together with 'finished') */
-    error_code:     sfetch_error_t; /* more detailed error code when failed is true */
-    channel:        u32; /* the channel which processes this request */
-    lane:           u32; /* the lane this request occupies on its channel */
-    path:           *u8; /* the original filesystem path of the request (FIXME: this is unsafe, wrap in API call?) */
-    user_data:      *void; /* pointer to read/write user-data area (FIXME: this is unsafe, wrap in API call?) */
-    fetched_offset: u32; /* current offset of fetched data chunk in file data */
-    fetched_size:   u32; /* size of fetched data chunk in number of bytes */
-    buffer_ptr:     *void; /* pointer to buffer with fetched data */
-    buffer_size:    u32; /* overall buffer size (may be >= than fetched_size!) */
+    handle:      sfetch_handle_t; // request handle this response belongs to
+    dispatched:  bool; // true when request is in DISPATCHED state (lane has been assigned)
+    fetched:     bool; // true when request is in FETCHED state (fetched data is available)
+    paused:      bool; // request is currently in paused state
+    finished:    bool; // this is the last response for this request
+    failed:      bool; // request has failed (always set together with 'finished')
+    cancelled:   bool; // request was cancelled (always set together with 'finished')
+    error_code:  sfetch_error_t; // more detailed error code when failed is true
+    channel:     u32; // the channel which processes this request
+    lane:        u32; // the lane this request occupies on its channel
+    path:        *u8; // the original filesystem path of the request
+    user_data:   *void; // pointer to read/write user-data area
+    data_offset: u32; // current offset of fetched data chunk in the overall file data
+    data:        sfetch_range_t; // the fetched data as ptr/size pair (data.ptr == buffer.ptr, data.size <= buffer.size)
+    buffer:      sfetch_range_t; // the user-provided buffer which holds the fetched data
 }
 #run {
     instance: sfetch_response_t;
@@ -106,15 +200,13 @@ sfetch_response_t :: struct {
     assert(size_of(type_of(sfetch_response_t.path)) == 8, "sfetch_response_t.path has unexpected size % instead of 8", size_of(type_of(sfetch_response_t.path)));
     assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 32, "sfetch_response_t.user_data has unexpected offset % instead of 32", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
     assert(size_of(type_of(sfetch_response_t.user_data)) == 8, "sfetch_response_t.user_data has unexpected size % instead of 8", size_of(type_of(sfetch_response_t.user_data)));
-    assert(((cast(*void)(*instance.fetched_offset)) - cast(*void)(*instance)) == 40, "sfetch_response_t.fetched_offset has unexpected offset % instead of 40", ((cast(*void)(*instance.fetched_offset)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_response_t.fetched_offset)) == 4, "sfetch_response_t.fetched_offset has unexpected size % instead of 4", size_of(type_of(sfetch_response_t.fetched_offset)));
-    assert(((cast(*void)(*instance.fetched_size)) - cast(*void)(*instance)) == 44, "sfetch_response_t.fetched_size has unexpected offset % instead of 44", ((cast(*void)(*instance.fetched_size)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_response_t.fetched_size)) == 4, "sfetch_response_t.fetched_size has unexpected size % instead of 4", size_of(type_of(sfetch_response_t.fetched_size)));
-    assert(((cast(*void)(*instance.buffer_ptr)) - cast(*void)(*instance)) == 48, "sfetch_response_t.buffer_ptr has unexpected offset % instead of 48", ((cast(*void)(*instance.buffer_ptr)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_response_t.buffer_ptr)) == 8, "sfetch_response_t.buffer_ptr has unexpected size % instead of 8", size_of(type_of(sfetch_response_t.buffer_ptr)));
-    assert(((cast(*void)(*instance.buffer_size)) - cast(*void)(*instance)) == 56, "sfetch_response_t.buffer_size has unexpected offset % instead of 56", ((cast(*void)(*instance.buffer_size)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_response_t.buffer_size)) == 4, "sfetch_response_t.buffer_size has unexpected size % instead of 4", size_of(type_of(sfetch_response_t.buffer_size)));
-    assert(size_of(sfetch_response_t) == 64, "sfetch_response_t has size % instead of 64", size_of(sfetch_response_t));
+    assert(((cast(*void)(*instance.data_offset)) - cast(*void)(*instance)) == 40, "sfetch_response_t.data_offset has unexpected offset % instead of 40", ((cast(*void)(*instance.data_offset)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_response_t.data_offset)) == 4, "sfetch_response_t.data_offset has unexpected size % instead of 4", size_of(type_of(sfetch_response_t.data_offset)));
+    assert(((cast(*void)(*instance.data)) - cast(*void)(*instance)) == 48, "sfetch_response_t.data has unexpected offset % instead of 48", ((cast(*void)(*instance.data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_response_t.data)) == 16, "sfetch_response_t.data has unexpected size % instead of 16", size_of(type_of(sfetch_response_t.data)));
+    assert(((cast(*void)(*instance.buffer)) - cast(*void)(*instance)) == 64, "sfetch_response_t.buffer has unexpected offset % instead of 64", ((cast(*void)(*instance.buffer)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_response_t.buffer)) == 16, "sfetch_response_t.buffer has unexpected size % instead of 16", size_of(type_of(sfetch_response_t.buffer)));
+    assert(size_of(sfetch_response_t) == 80, "sfetch_response_t has size % instead of 80", size_of(sfetch_response_t));
 }
 
 /* response callback function signature */
@@ -122,40 +214,28 @@ sfetch_callback_t :: #type (unknown0: *sfetch_response_t) -> void #c_call;
 
 /* request parameters passed to sfetch_send() */
 sfetch_request_t :: struct {
-    _start_canary:  u32;
-    channel:        u32; /* index of channel this request is assigned to (default: 0) */
-    path:           *u8; /* filesystem path or HTTP URL (required) */
-    callback:       sfetch_callback_t; /* response callback function pointer (required) */
-    buffer_ptr:     *void; /* buffer pointer where data will be loaded into (optional) */
-    buffer_size:    u32; /* buffer size in number of bytes (optional) */
-    chunk_size:     u32; /* number of bytes to load per stream-block (optional) */
-    user_data_ptr:  *void; /* pointer to a POD user-data block which will be memcpy'd(!) (optional) */
-    user_data_size: u32; /* size of user-data block (optional) */
-    _end_canary:    u32;
+    channel:    u32; // index of channel this request is assigned to (default: 0)
+    path:       *u8; // filesystem path or HTTP URL (required)
+    callback:   sfetch_callback_t; // response callback function pointer (required)
+    chunk_size: u32; // number of bytes to load per stream-block (optional)
+    buffer:     sfetch_range_t; // a memory buffer where the data will be loaded into (optional)
+    user_data:  sfetch_range_t; // ptr/size of a POD user data block which will be memcpy'd (optional)
 }
 #run {
     instance: sfetch_request_t;
-    assert(((cast(*void)(*instance._start_canary)) - cast(*void)(*instance)) == 0, "sfetch_request_t._start_canary has unexpected offset % instead of 0", ((cast(*void)(*instance._start_canary)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_request_t._start_canary)) == 4, "sfetch_request_t._start_canary has unexpected size % instead of 4", size_of(type_of(sfetch_request_t._start_canary)));
-    assert(((cast(*void)(*instance.channel)) - cast(*void)(*instance)) == 4, "sfetch_request_t.channel has unexpected offset % instead of 4", ((cast(*void)(*instance.channel)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.channel)) - cast(*void)(*instance)) == 0, "sfetch_request_t.channel has unexpected offset % instead of 0", ((cast(*void)(*instance.channel)) - cast(*void)(*instance)));
     assert(size_of(type_of(sfetch_request_t.channel)) == 4, "sfetch_request_t.channel has unexpected size % instead of 4", size_of(type_of(sfetch_request_t.channel)));
     assert(((cast(*void)(*instance.path)) - cast(*void)(*instance)) == 8, "sfetch_request_t.path has unexpected offset % instead of 8", ((cast(*void)(*instance.path)) - cast(*void)(*instance)));
     assert(size_of(type_of(sfetch_request_t.path)) == 8, "sfetch_request_t.path has unexpected size % instead of 8", size_of(type_of(sfetch_request_t.path)));
     assert(((cast(*void)(*instance.callback)) - cast(*void)(*instance)) == 16, "sfetch_request_t.callback has unexpected offset % instead of 16", ((cast(*void)(*instance.callback)) - cast(*void)(*instance)));
     assert(size_of(type_of(sfetch_request_t.callback)) == 8, "sfetch_request_t.callback has unexpected size % instead of 8", size_of(type_of(sfetch_request_t.callback)));
-    assert(((cast(*void)(*instance.buffer_ptr)) - cast(*void)(*instance)) == 24, "sfetch_request_t.buffer_ptr has unexpected offset % instead of 24", ((cast(*void)(*instance.buffer_ptr)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_request_t.buffer_ptr)) == 8, "sfetch_request_t.buffer_ptr has unexpected size % instead of 8", size_of(type_of(sfetch_request_t.buffer_ptr)));
-    assert(((cast(*void)(*instance.buffer_size)) - cast(*void)(*instance)) == 32, "sfetch_request_t.buffer_size has unexpected offset % instead of 32", ((cast(*void)(*instance.buffer_size)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_request_t.buffer_size)) == 4, "sfetch_request_t.buffer_size has unexpected size % instead of 4", size_of(type_of(sfetch_request_t.buffer_size)));
-    assert(((cast(*void)(*instance.chunk_size)) - cast(*void)(*instance)) == 36, "sfetch_request_t.chunk_size has unexpected offset % instead of 36", ((cast(*void)(*instance.chunk_size)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.chunk_size)) - cast(*void)(*instance)) == 24, "sfetch_request_t.chunk_size has unexpected offset % instead of 24", ((cast(*void)(*instance.chunk_size)) - cast(*void)(*instance)));
     assert(size_of(type_of(sfetch_request_t.chunk_size)) == 4, "sfetch_request_t.chunk_size has unexpected size % instead of 4", size_of(type_of(sfetch_request_t.chunk_size)));
-    assert(((cast(*void)(*instance.user_data_ptr)) - cast(*void)(*instance)) == 40, "sfetch_request_t.user_data_ptr has unexpected offset % instead of 40", ((cast(*void)(*instance.user_data_ptr)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_request_t.user_data_ptr)) == 8, "sfetch_request_t.user_data_ptr has unexpected size % instead of 8", size_of(type_of(sfetch_request_t.user_data_ptr)));
-    assert(((cast(*void)(*instance.user_data_size)) - cast(*void)(*instance)) == 48, "sfetch_request_t.user_data_size has unexpected offset % instead of 48", ((cast(*void)(*instance.user_data_size)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_request_t.user_data_size)) == 4, "sfetch_request_t.user_data_size has unexpected size % instead of 4", size_of(type_of(sfetch_request_t.user_data_size)));
-    assert(((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)) == 52, "sfetch_request_t._end_canary has unexpected offset % instead of 52", ((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sfetch_request_t._end_canary)) == 4, "sfetch_request_t._end_canary has unexpected size % instead of 4", size_of(type_of(sfetch_request_t._end_canary)));
-    assert(size_of(sfetch_request_t) == 56, "sfetch_request_t has size % instead of 56", size_of(sfetch_request_t));
+    assert(((cast(*void)(*instance.buffer)) - cast(*void)(*instance)) == 32, "sfetch_request_t.buffer has unexpected offset % instead of 32", ((cast(*void)(*instance.buffer)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_request_t.buffer)) == 16, "sfetch_request_t.buffer has unexpected size % instead of 16", size_of(type_of(sfetch_request_t.buffer)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 48, "sfetch_request_t.user_data has unexpected offset % instead of 48", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sfetch_request_t.user_data)) == 16, "sfetch_request_t.user_data has unexpected size % instead of 16", size_of(type_of(sfetch_request_t.user_data)));
+    assert(size_of(sfetch_request_t) == 64, "sfetch_request_t has size % instead of 64", size_of(sfetch_request_t));
 }
 
 /* setup sokol-fetch (can be called on multiple threads) */
@@ -186,7 +266,7 @@ sfetch_handle_valid :: (h: sfetch_handle_t) -> bool #foreign sokol_fetch;
 sfetch_dowork :: () -> void #foreign sokol_fetch;
 
 /* bind a data buffer to a request (request must not currently have a buffer bound, must be called from response callback */
-sfetch_bind_buffer :: (h: sfetch_handle_t, buffer_ptr: *void, buffer_size: u32) -> void #foreign sokol_fetch;
+sfetch_bind_buffer :: (h: sfetch_handle_t, buffer: sfetch_range_t) -> void #foreign sokol_fetch;
 
 /* clear the 'buffer binding' of a request, returns previous buffer pointer (can be 0), must be called from response callback */
 sfetch_unbind_buffer :: (h: sfetch_handle_t) -> *void #foreign sokol_fetch;

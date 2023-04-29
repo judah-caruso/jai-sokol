@@ -47,13 +47,14 @@ sapp_event_type :: enum u32 {
     SAPP_EVENTTYPE_RESIZED           :: 14;
     SAPP_EVENTTYPE_ICONIFIED         :: 15;
     SAPP_EVENTTYPE_RESTORED          :: 16;
-    SAPP_EVENTTYPE_SUSPENDED         :: 17;
-    SAPP_EVENTTYPE_RESUMED           :: 18;
-    SAPP_EVENTTYPE_UPDATE_CURSOR     :: 19;
-    SAPP_EVENTTYPE_QUIT_REQUESTED    :: 20;
-    SAPP_EVENTTYPE_CLIPBOARD_PASTED  :: 21;
-    SAPP_EVENTTYPE_FILES_DROPPED     :: 22;
-    SAPP_EVENTTYPE_NUM               :: 23;
+    SAPP_EVENTTYPE_FOCUSED           :: 17;
+    SAPP_EVENTTYPE_UNFOCUSED         :: 18;
+    SAPP_EVENTTYPE_SUSPENDED         :: 19;
+    SAPP_EVENTTYPE_RESUMED           :: 20;
+    SAPP_EVENTTYPE_QUIT_REQUESTED    :: 21;
+    SAPP_EVENTTYPE_CLIPBOARD_PASTED  :: 22;
+    SAPP_EVENTTYPE_FILES_DROPPED     :: 23;
+    SAPP_EVENTTYPE_NUM               :: 24;
     SAPP_EVENTTYPE_FORCE_U32         :: 2147483647;
 
     _SAPP_EVENTTYPE_NUM       :: SAPP_EVENTTYPE_NUM;
@@ -315,6 +316,28 @@ sapp_keycode :: enum u32 {
 }
 
 /*
+Android specific 'tool type' enum for touch events. This lets the
+application check what type of input device was used for
+touch events.
+
+NOTE: the values must remain in sync with the corresponding
+Android SDK type, so don't change those.
+
+See https://developer.android.com/reference/android/view/MotionEvent#TOOL_TYPE_UNKNOWN
+*/
+sapp_android_tooltype :: enum u32 {
+    UNKNOWN :: 0;
+    FINGER  :: 1;
+    STYLUS  :: 2;
+    MOUSE   :: 3;
+
+    SAPP_ANDROIDTOOLTYPE_UNKNOWN :: UNKNOWN;
+    SAPP_ANDROIDTOOLTYPE_FINGER  :: FINGER;
+    SAPP_ANDROIDTOOLTYPE_STYLUS  :: STYLUS;
+    SAPP_ANDROIDTOOLTYPE_MOUSE   :: MOUSE;
+}
+
+/*
 sapp_touchpoint
 
 Describes a single touchpoint in a multitouch event (TOUCHES_BEGAN,
@@ -324,10 +347,11 @@ Touch points are stored in the nested array sapp_event.touches[],
 and the number of touches is stored in sapp_event.num_touches.
 */
 sapp_touchpoint :: struct {
-    identifier: u64;
-    pos_x:      float;
-    pos_y:      float;
-    changed:    bool;
+    identifier:       u64;
+    pos_x:            float;
+    pos_y:            float;
+    android_tooltype: sapp_android_tooltype; // only valid on Android
+    changed:          bool;
 }
 #run {
     instance: sapp_touchpoint;
@@ -337,7 +361,9 @@ sapp_touchpoint :: struct {
     assert(size_of(type_of(sapp_touchpoint.pos_x)) == 4, "sapp_touchpoint.pos_x has unexpected size % instead of 4", size_of(type_of(sapp_touchpoint.pos_x)));
     assert(((cast(*void)(*instance.pos_y)) - cast(*void)(*instance)) == 12, "sapp_touchpoint.pos_y has unexpected offset % instead of 12", ((cast(*void)(*instance.pos_y)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_touchpoint.pos_y)) == 4, "sapp_touchpoint.pos_y has unexpected size % instead of 4", size_of(type_of(sapp_touchpoint.pos_y)));
-    assert(((cast(*void)(*instance.changed)) - cast(*void)(*instance)) == 16, "sapp_touchpoint.changed has unexpected offset % instead of 16", ((cast(*void)(*instance.changed)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.android_tooltype)) - cast(*void)(*instance)) == 16, "sapp_touchpoint.android_tooltype has unexpected offset % instead of 16", ((cast(*void)(*instance.android_tooltype)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_touchpoint.android_tooltype)) == 4, "sapp_touchpoint.android_tooltype has unexpected size % instead of 4", size_of(type_of(sapp_touchpoint.android_tooltype)));
+    assert(((cast(*void)(*instance.changed)) - cast(*void)(*instance)) == 20, "sapp_touchpoint.changed has unexpected offset % instead of 20", ((cast(*void)(*instance.changed)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_touchpoint.changed)) == 1, "sapp_touchpoint.changed has unexpected size % instead of 1", size_of(type_of(sapp_touchpoint.changed)));
     assert(size_of(sapp_touchpoint) == 24, "sapp_touchpoint has size % instead of 24", size_of(sapp_touchpoint));
 }
@@ -532,19 +558,239 @@ sapp_icon_desc :: struct {
     assert(size_of(sapp_icon_desc) == 200, "sapp_icon_desc has size % instead of 200", size_of(sapp_icon_desc));
 }
 
+/*
+sapp_allocator
+
+Used in sapp_desc to provide custom memory-alloc and -free functions
+to sokol_app.h. If memory management should be overridden, both the
+alloc and free function must be provided (e.g. it's not valid to
+override one function but not the other).
+*/
+sapp_allocator :: struct {
+    alloc:     #type (size: size_t, user_data: *void) -> *void #c_call;
+    free:      #type (ptr: *void, user_data: *void) -> void #c_call;
+    user_data: *void;
+}
+#run {
+    instance: sapp_allocator;
+    assert(((cast(*void)(*instance.alloc)) - cast(*void)(*instance)) == 0, "sapp_allocator.alloc has unexpected offset % instead of 0", ((cast(*void)(*instance.alloc)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_allocator.alloc)) == 8, "sapp_allocator.alloc has unexpected size % instead of 8", size_of(type_of(sapp_allocator.alloc)));
+    assert(((cast(*void)(*instance.free)) - cast(*void)(*instance)) == 8, "sapp_allocator.free has unexpected offset % instead of 8", ((cast(*void)(*instance.free)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_allocator.free)) == 8, "sapp_allocator.free has unexpected size % instead of 8", size_of(type_of(sapp_allocator.free)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 16, "sapp_allocator.user_data has unexpected offset % instead of 16", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_allocator.user_data)) == 8, "sapp_allocator.user_data has unexpected size % instead of 8", size_of(type_of(sapp_allocator.user_data)));
+    assert(size_of(sapp_allocator) == 24, "sapp_allocator has size % instead of 24", size_of(sapp_allocator));
+}
+
+sapp_log_item :: enum u32 {
+    OK                                                        :: 0;
+    MALLOC_FAILED                                             :: 1;
+    MACOS_INVALID_NSOPENGL_PROFILE                            :: 2;
+    WIN32_LOAD_OPENGL32_DLL_FAILED                            :: 3;
+    WIN32_CREATE_HELPER_WINDOW_FAILED                         :: 4;
+    WIN32_HELPER_WINDOW_GETDC_FAILED                          :: 5;
+    WIN32_DUMMY_CONTEXT_SET_PIXELFORMAT_FAILED                :: 6;
+    WIN32_CREATE_DUMMY_CONTEXT_FAILED                         :: 7;
+    WIN32_DUMMY_CONTEXT_MAKE_CURRENT_FAILED                   :: 8;
+    WIN32_GET_PIXELFORMAT_ATTRIB_FAILED                       :: 9;
+    WIN32_WGL_FIND_PIXELFORMAT_FAILED                         :: 10;
+    WIN32_WGL_DESCRIBE_PIXELFORMAT_FAILED                     :: 11;
+    WIN32_WGL_SET_PIXELFORMAT_FAILED                          :: 12;
+    WIN32_WGL_ARB_CREATE_CONTEXT_REQUIRED                     :: 13;
+    WIN32_WGL_ARB_CREATE_CONTEXT_PROFILE_REQUIRED             :: 14;
+    WIN32_WGL_OPENGL_3_2_NOT_SUPPORTED                        :: 15;
+    WIN32_WGL_OPENGL_PROFILE_NOT_SUPPORTED                    :: 16;
+    WIN32_WGL_INCOMPATIBLE_DEVICE_CONTEXT                     :: 17;
+    WIN32_WGL_CREATE_CONTEXT_ATTRIBS_FAILED_OTHER             :: 18;
+    WIN32_D3D11_CREATE_DEVICE_AND_SWAPCHAIN_WITH_DEBUG_FAILED :: 19;
+    WIN32_D3D11_GET_IDXGIFACTORY_FAILED                       :: 20;
+    WIN32_D3D11_GET_IDXGIADAPTER_FAILED                       :: 21;
+    WIN32_D3D11_QUERY_INTERFACE_IDXGIDEVICE1_FAILED           :: 22;
+    WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_LOCK        :: 23;
+    WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_UNLOCK      :: 24;
+    WIN32_GET_RAW_INPUT_DATA_FAILED                           :: 25;
+    LINUX_GLX_LOAD_LIBGL_FAILED                               :: 26;
+    LINUX_GLX_LOAD_ENTRY_POINTS_FAILED                        :: 27;
+    LINUX_GLX_EXTENSION_NOT_FOUND                             :: 28;
+    LINUX_GLX_QUERY_VERSION_FAILED                            :: 29;
+    LINUX_GLX_VERSION_TOO_LOW                                 :: 30;
+    LINUX_GLX_NO_GLXFBCONFIGS                                 :: 31;
+    LINUX_GLX_NO_SUITABLE_GLXFBCONFIG                         :: 32;
+    LINUX_GLX_GET_VISUAL_FROM_FBCONFIG_FAILED                 :: 33;
+    LINUX_GLX_REQUIRED_EXTENSIONS_MISSING                     :: 34;
+    LINUX_GLX_CREATE_CONTEXT_FAILED                           :: 35;
+    LINUX_GLX_CREATE_WINDOW_FAILED                            :: 36;
+    LINUX_X11_CREATE_WINDOW_FAILED                            :: 37;
+    LINUX_EGL_BIND_OPENGL_API_FAILED                          :: 38;
+    LINUX_EGL_BIND_OPENGL_ES_API_FAILED                       :: 39;
+    LINUX_EGL_GET_DISPLAY_FAILED                              :: 40;
+    LINUX_EGL_INITIALIZE_FAILED                               :: 41;
+    LINUX_EGL_NO_CONFIGS                                      :: 42;
+    LINUX_EGL_NO_NATIVE_VISUAL                                :: 43;
+    LINUX_EGL_GET_VISUAL_INFO_FAILED                          :: 44;
+    LINUX_EGL_CREATE_WINDOW_SURFACE_FAILED                    :: 45;
+    LINUX_EGL_CREATE_CONTEXT_FAILED                           :: 46;
+    LINUX_EGL_MAKE_CURRENT_FAILED                             :: 47;
+    LINUX_X11_OPEN_DISPLAY_FAILED                             :: 48;
+    LINUX_X11_QUERY_SYSTEM_DPI_FAILED                         :: 49;
+    LINUX_X11_DROPPED_FILE_URI_WRONG_SCHEME                   :: 50;
+    ANDROID_UNSUPPORTED_INPUT_EVENT_INPUT_CB                  :: 51;
+    ANDROID_UNSUPPORTED_INPUT_EVENT_MAIN_CB                   :: 52;
+    ANDROID_READ_MSG_FAILED                                   :: 53;
+    ANDROID_WRITE_MSG_FAILED                                  :: 54;
+    ANDROID_MSG_CREATE                                        :: 55;
+    ANDROID_MSG_RESUME                                        :: 56;
+    ANDROID_MSG_PAUSE                                         :: 57;
+    ANDROID_MSG_FOCUS                                         :: 58;
+    ANDROID_MSG_NO_FOCUS                                      :: 59;
+    ANDROID_MSG_SET_NATIVE_WINDOW                             :: 60;
+    ANDROID_MSG_SET_INPUT_QUEUE                               :: 61;
+    ANDROID_MSG_DESTROY                                       :: 62;
+    ANDROID_UNKNOWN_MSG                                       :: 63;
+    ANDROID_LOOP_THREAD_STARTED                               :: 64;
+    ANDROID_LOOP_THREAD_DONE                                  :: 65;
+    ANDROID_NATIVE_ACTIVITY_ONSTART                           :: 66;
+    ANDROID_NATIVE_ACTIVITY_ONRESUME                          :: 67;
+    ANDROID_NATIVE_ACTIVITY_ONSAVEINSTANCESTATE               :: 68;
+    ANDROID_NATIVE_ACTIVITY_ONWINDOWFOCUSCHANGED              :: 69;
+    ANDROID_NATIVE_ACTIVITY_ONPAUSE                           :: 70;
+    ANDROID_NATIVE_ACTIVITY_ONSTOP                            :: 71;
+    ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWCREATED             :: 72;
+    ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWDESTROYED           :: 73;
+    ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUECREATED               :: 74;
+    ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUEDESTROYED             :: 75;
+    ANDROID_NATIVE_ACTIVITY_ONCONFIGURATIONCHANGED            :: 76;
+    ANDROID_NATIVE_ACTIVITY_ONLOWMEMORY                       :: 77;
+    ANDROID_NATIVE_ACTIVITY_ONDESTROY                         :: 78;
+    ANDROID_NATIVE_ACTIVITY_DONE                              :: 79;
+    ANDROID_NATIVE_ACTIVITY_ONCREATE                          :: 80;
+    ANDROID_CREATE_THREAD_PIPE_FAILED                         :: 81;
+    ANDROID_NATIVE_ACTIVITY_CREATE_SUCCESS                    :: 82;
+    IMAGE_DATA_SIZE_MISMATCH                                  :: 83;
+    DROPPED_FILE_PATH_TOO_LONG                                :: 84;
+    CLIPBOARD_STRING_TOO_BIG                                  :: 85;
+    SAPP_LOGITEM_OK                                                        :: OK;
+    SAPP_LOGITEM_MALLOC_FAILED                                             :: MALLOC_FAILED;
+    SAPP_LOGITEM_MACOS_INVALID_NSOPENGL_PROFILE                            :: MACOS_INVALID_NSOPENGL_PROFILE;
+    SAPP_LOGITEM_WIN32_LOAD_OPENGL32_DLL_FAILED                            :: WIN32_LOAD_OPENGL32_DLL_FAILED;
+    SAPP_LOGITEM_WIN32_CREATE_HELPER_WINDOW_FAILED                         :: WIN32_CREATE_HELPER_WINDOW_FAILED;
+    SAPP_LOGITEM_WIN32_HELPER_WINDOW_GETDC_FAILED                          :: WIN32_HELPER_WINDOW_GETDC_FAILED;
+    SAPP_LOGITEM_WIN32_DUMMY_CONTEXT_SET_PIXELFORMAT_FAILED                :: WIN32_DUMMY_CONTEXT_SET_PIXELFORMAT_FAILED;
+    SAPP_LOGITEM_WIN32_CREATE_DUMMY_CONTEXT_FAILED                         :: WIN32_CREATE_DUMMY_CONTEXT_FAILED;
+    SAPP_LOGITEM_WIN32_DUMMY_CONTEXT_MAKE_CURRENT_FAILED                   :: WIN32_DUMMY_CONTEXT_MAKE_CURRENT_FAILED;
+    SAPP_LOGITEM_WIN32_GET_PIXELFORMAT_ATTRIB_FAILED                       :: WIN32_GET_PIXELFORMAT_ATTRIB_FAILED;
+    SAPP_LOGITEM_WIN32_WGL_FIND_PIXELFORMAT_FAILED                         :: WIN32_WGL_FIND_PIXELFORMAT_FAILED;
+    SAPP_LOGITEM_WIN32_WGL_DESCRIBE_PIXELFORMAT_FAILED                     :: WIN32_WGL_DESCRIBE_PIXELFORMAT_FAILED;
+    SAPP_LOGITEM_WIN32_WGL_SET_PIXELFORMAT_FAILED                          :: WIN32_WGL_SET_PIXELFORMAT_FAILED;
+    SAPP_LOGITEM_WIN32_WGL_ARB_CREATE_CONTEXT_REQUIRED                     :: WIN32_WGL_ARB_CREATE_CONTEXT_REQUIRED;
+    SAPP_LOGITEM_WIN32_WGL_ARB_CREATE_CONTEXT_PROFILE_REQUIRED             :: WIN32_WGL_ARB_CREATE_CONTEXT_PROFILE_REQUIRED;
+    SAPP_LOGITEM_WIN32_WGL_OPENGL_3_2_NOT_SUPPORTED                        :: WIN32_WGL_OPENGL_3_2_NOT_SUPPORTED;
+    SAPP_LOGITEM_WIN32_WGL_OPENGL_PROFILE_NOT_SUPPORTED                    :: WIN32_WGL_OPENGL_PROFILE_NOT_SUPPORTED;
+    SAPP_LOGITEM_WIN32_WGL_INCOMPATIBLE_DEVICE_CONTEXT                     :: WIN32_WGL_INCOMPATIBLE_DEVICE_CONTEXT;
+    SAPP_LOGITEM_WIN32_WGL_CREATE_CONTEXT_ATTRIBS_FAILED_OTHER             :: WIN32_WGL_CREATE_CONTEXT_ATTRIBS_FAILED_OTHER;
+    SAPP_LOGITEM_WIN32_D3D11_CREATE_DEVICE_AND_SWAPCHAIN_WITH_DEBUG_FAILED :: WIN32_D3D11_CREATE_DEVICE_AND_SWAPCHAIN_WITH_DEBUG_FAILED;
+    SAPP_LOGITEM_WIN32_D3D11_GET_IDXGIFACTORY_FAILED                       :: WIN32_D3D11_GET_IDXGIFACTORY_FAILED;
+    SAPP_LOGITEM_WIN32_D3D11_GET_IDXGIADAPTER_FAILED                       :: WIN32_D3D11_GET_IDXGIADAPTER_FAILED;
+    SAPP_LOGITEM_WIN32_D3D11_QUERY_INTERFACE_IDXGIDEVICE1_FAILED           :: WIN32_D3D11_QUERY_INTERFACE_IDXGIDEVICE1_FAILED;
+    SAPP_LOGITEM_WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_LOCK        :: WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_LOCK;
+    SAPP_LOGITEM_WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_UNLOCK      :: WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_UNLOCK;
+    SAPP_LOGITEM_WIN32_GET_RAW_INPUT_DATA_FAILED                           :: WIN32_GET_RAW_INPUT_DATA_FAILED;
+    SAPP_LOGITEM_LINUX_GLX_LOAD_LIBGL_FAILED                               :: LINUX_GLX_LOAD_LIBGL_FAILED;
+    SAPP_LOGITEM_LINUX_GLX_LOAD_ENTRY_POINTS_FAILED                        :: LINUX_GLX_LOAD_ENTRY_POINTS_FAILED;
+    SAPP_LOGITEM_LINUX_GLX_EXTENSION_NOT_FOUND                             :: LINUX_GLX_EXTENSION_NOT_FOUND;
+    SAPP_LOGITEM_LINUX_GLX_QUERY_VERSION_FAILED                            :: LINUX_GLX_QUERY_VERSION_FAILED;
+    SAPP_LOGITEM_LINUX_GLX_VERSION_TOO_LOW                                 :: LINUX_GLX_VERSION_TOO_LOW;
+    SAPP_LOGITEM_LINUX_GLX_NO_GLXFBCONFIGS                                 :: LINUX_GLX_NO_GLXFBCONFIGS;
+    SAPP_LOGITEM_LINUX_GLX_NO_SUITABLE_GLXFBCONFIG                         :: LINUX_GLX_NO_SUITABLE_GLXFBCONFIG;
+    SAPP_LOGITEM_LINUX_GLX_GET_VISUAL_FROM_FBCONFIG_FAILED                 :: LINUX_GLX_GET_VISUAL_FROM_FBCONFIG_FAILED;
+    SAPP_LOGITEM_LINUX_GLX_REQUIRED_EXTENSIONS_MISSING                     :: LINUX_GLX_REQUIRED_EXTENSIONS_MISSING;
+    SAPP_LOGITEM_LINUX_GLX_CREATE_CONTEXT_FAILED                           :: LINUX_GLX_CREATE_CONTEXT_FAILED;
+    SAPP_LOGITEM_LINUX_GLX_CREATE_WINDOW_FAILED                            :: LINUX_GLX_CREATE_WINDOW_FAILED;
+    SAPP_LOGITEM_LINUX_X11_CREATE_WINDOW_FAILED                            :: LINUX_X11_CREATE_WINDOW_FAILED;
+    SAPP_LOGITEM_LINUX_EGL_BIND_OPENGL_API_FAILED                          :: LINUX_EGL_BIND_OPENGL_API_FAILED;
+    SAPP_LOGITEM_LINUX_EGL_BIND_OPENGL_ES_API_FAILED                       :: LINUX_EGL_BIND_OPENGL_ES_API_FAILED;
+    SAPP_LOGITEM_LINUX_EGL_GET_DISPLAY_FAILED                              :: LINUX_EGL_GET_DISPLAY_FAILED;
+    SAPP_LOGITEM_LINUX_EGL_INITIALIZE_FAILED                               :: LINUX_EGL_INITIALIZE_FAILED;
+    SAPP_LOGITEM_LINUX_EGL_NO_CONFIGS                                      :: LINUX_EGL_NO_CONFIGS;
+    SAPP_LOGITEM_LINUX_EGL_NO_NATIVE_VISUAL                                :: LINUX_EGL_NO_NATIVE_VISUAL;
+    SAPP_LOGITEM_LINUX_EGL_GET_VISUAL_INFO_FAILED                          :: LINUX_EGL_GET_VISUAL_INFO_FAILED;
+    SAPP_LOGITEM_LINUX_EGL_CREATE_WINDOW_SURFACE_FAILED                    :: LINUX_EGL_CREATE_WINDOW_SURFACE_FAILED;
+    SAPP_LOGITEM_LINUX_EGL_CREATE_CONTEXT_FAILED                           :: LINUX_EGL_CREATE_CONTEXT_FAILED;
+    SAPP_LOGITEM_LINUX_EGL_MAKE_CURRENT_FAILED                             :: LINUX_EGL_MAKE_CURRENT_FAILED;
+    SAPP_LOGITEM_LINUX_X11_OPEN_DISPLAY_FAILED                             :: LINUX_X11_OPEN_DISPLAY_FAILED;
+    SAPP_LOGITEM_LINUX_X11_QUERY_SYSTEM_DPI_FAILED                         :: LINUX_X11_QUERY_SYSTEM_DPI_FAILED;
+    SAPP_LOGITEM_LINUX_X11_DROPPED_FILE_URI_WRONG_SCHEME                   :: LINUX_X11_DROPPED_FILE_URI_WRONG_SCHEME;
+    SAPP_LOGITEM_ANDROID_UNSUPPORTED_INPUT_EVENT_INPUT_CB                  :: ANDROID_UNSUPPORTED_INPUT_EVENT_INPUT_CB;
+    SAPP_LOGITEM_ANDROID_UNSUPPORTED_INPUT_EVENT_MAIN_CB                   :: ANDROID_UNSUPPORTED_INPUT_EVENT_MAIN_CB;
+    SAPP_LOGITEM_ANDROID_READ_MSG_FAILED                                   :: ANDROID_READ_MSG_FAILED;
+    SAPP_LOGITEM_ANDROID_WRITE_MSG_FAILED                                  :: ANDROID_WRITE_MSG_FAILED;
+    SAPP_LOGITEM_ANDROID_MSG_CREATE                                        :: ANDROID_MSG_CREATE;
+    SAPP_LOGITEM_ANDROID_MSG_RESUME                                        :: ANDROID_MSG_RESUME;
+    SAPP_LOGITEM_ANDROID_MSG_PAUSE                                         :: ANDROID_MSG_PAUSE;
+    SAPP_LOGITEM_ANDROID_MSG_FOCUS                                         :: ANDROID_MSG_FOCUS;
+    SAPP_LOGITEM_ANDROID_MSG_NO_FOCUS                                      :: ANDROID_MSG_NO_FOCUS;
+    SAPP_LOGITEM_ANDROID_MSG_SET_NATIVE_WINDOW                             :: ANDROID_MSG_SET_NATIVE_WINDOW;
+    SAPP_LOGITEM_ANDROID_MSG_SET_INPUT_QUEUE                               :: ANDROID_MSG_SET_INPUT_QUEUE;
+    SAPP_LOGITEM_ANDROID_MSG_DESTROY                                       :: ANDROID_MSG_DESTROY;
+    SAPP_LOGITEM_ANDROID_UNKNOWN_MSG                                       :: ANDROID_UNKNOWN_MSG;
+    SAPP_LOGITEM_ANDROID_LOOP_THREAD_STARTED                               :: ANDROID_LOOP_THREAD_STARTED;
+    SAPP_LOGITEM_ANDROID_LOOP_THREAD_DONE                                  :: ANDROID_LOOP_THREAD_DONE;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONSTART                           :: ANDROID_NATIVE_ACTIVITY_ONSTART;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONRESUME                          :: ANDROID_NATIVE_ACTIVITY_ONRESUME;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONSAVEINSTANCESTATE               :: ANDROID_NATIVE_ACTIVITY_ONSAVEINSTANCESTATE;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONWINDOWFOCUSCHANGED              :: ANDROID_NATIVE_ACTIVITY_ONWINDOWFOCUSCHANGED;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONPAUSE                           :: ANDROID_NATIVE_ACTIVITY_ONPAUSE;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONSTOP                            :: ANDROID_NATIVE_ACTIVITY_ONSTOP;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWCREATED             :: ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWCREATED;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWDESTROYED           :: ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWDESTROYED;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUECREATED               :: ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUECREATED;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUEDESTROYED             :: ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUEDESTROYED;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONCONFIGURATIONCHANGED            :: ANDROID_NATIVE_ACTIVITY_ONCONFIGURATIONCHANGED;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONLOWMEMORY                       :: ANDROID_NATIVE_ACTIVITY_ONLOWMEMORY;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONDESTROY                         :: ANDROID_NATIVE_ACTIVITY_ONDESTROY;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_DONE                              :: ANDROID_NATIVE_ACTIVITY_DONE;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONCREATE                          :: ANDROID_NATIVE_ACTIVITY_ONCREATE;
+    SAPP_LOGITEM_ANDROID_CREATE_THREAD_PIPE_FAILED                         :: ANDROID_CREATE_THREAD_PIPE_FAILED;
+    SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_CREATE_SUCCESS                    :: ANDROID_NATIVE_ACTIVITY_CREATE_SUCCESS;
+    SAPP_LOGITEM_IMAGE_DATA_SIZE_MISMATCH                                  :: IMAGE_DATA_SIZE_MISMATCH;
+    SAPP_LOGITEM_DROPPED_FILE_PATH_TOO_LONG                                :: DROPPED_FILE_PATH_TOO_LONG;
+    SAPP_LOGITEM_CLIPBOARD_STRING_TOO_BIG                                  :: CLIPBOARD_STRING_TOO_BIG;
+}
+
+/*
+sapp_logger
+
+Used in sapp_desc to provide a logging function. Please be aware that
+without logging function, sokol-app will be completely silent, e.g. it will
+not report errors or warnings. For maximum error verbosity, compile in
+debug mode (e.g. NDEBUG *not* defined) and install a logger (for instance
+the standard logging function from sokol_log.h).
+*/
+sapp_logger :: struct {
+    func:      #type (tag: *u8, log_level: u32, log_item_id: u32, message_or_null: *u8, line_nr: u32, filename_or_null: *u8, user_data: *void) -> void #c_call;
+
+    user_data: *void;
+}
+#run {
+    instance: sapp_logger;
+    assert(((cast(*void)(*instance.func)) - cast(*void)(*instance)) == 0, "sapp_logger.func has unexpected offset % instead of 0", ((cast(*void)(*instance.func)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_logger.func)) == 8, "sapp_logger.func has unexpected size % instead of 8", size_of(type_of(sapp_logger.func)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 8, "sapp_logger.user_data has unexpected offset % instead of 8", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_logger.user_data)) == 8, "sapp_logger.user_data has unexpected size % instead of 8", size_of(type_of(sapp_logger.user_data)));
+    assert(size_of(sapp_logger) == 16, "sapp_logger has size % instead of 16", size_of(sapp_logger));
+}
+
 sapp_desc :: struct {
     init_cb:                       #type () -> void #c_call; // these are the user-provided callbacks without user data
     frame_cb:                      #type () -> void #c_call;
     cleanup_cb:                    #type () -> void #c_call;
     event_cb:                      #type (unknown0: *sapp_event) -> void #c_call;
-    fail_cb:                       #type (unknown0: *u8) -> void #c_call;
 
     user_data:                     *void; // these are the user-provided callbacks with user data
     init_userdata_cb:              #type (unknown0: *void) -> void #c_call;
     frame_userdata_cb:             #type (unknown0: *void) -> void #c_call;
     cleanup_userdata_cb:           #type (unknown0: *void) -> void #c_call;
     event_userdata_cb:             #type (unknown0: *sapp_event, unknown1: *void) -> void #c_call;
-    fail_userdata_cb:              #type (unknown0: *u8, unknown1: *void) -> void #c_call;
 
     width:                         s32; // the preferred width of the window / canvas
     height:                        s32; // the preferred height of the window / canvas
@@ -554,15 +800,18 @@ sapp_desc :: struct {
     fullscreen:                    bool; // whether the window should be created in fullscreen mode
     alpha:                         bool; // whether the framebuffer should have an alpha channel (ignored on some platforms)
     window_title:                  *u8; // the window title as UTF-8 encoded string
-    user_cursor:                   bool; // if true, user is expected to manage cursor image in SAPP_EVENTTYPE_UPDATE_CURSOR
     enable_clipboard:              bool; // enable clipboard access, default is false
     clipboard_size:                s32; // max size of clipboard content in bytes
     enable_dragndrop:              bool; // enable file dropping (drag'n'drop), default is false
     max_dropped_files:             s32; // max number of dropped files to process (default: 1)
     max_dropped_file_path_length:  s32; // max length in bytes of a dropped UTF-8 file path (default: 2048)
     icon:                          sapp_icon_desc; // the initial window icon to set
+    allocator:                     sapp_allocator; // optional memory allocation overrides (default: malloc/free)
+    logger:                        sapp_logger; // logging callback override (default: NO LOGGING!)
 
     gl_force_gles2:                bool; // if true, setup GLES2/WebGL even if GLES3/WebGL2 is available
+    gl_major_version:              s32; // override GL major and minor version (the default GL version is 3.2)
+    gl_minor_version:              s32;
     win32_console_utf8:            bool; // if true, set the output console codepage to UTF-8
     win32_console_create:          bool; // if true, attach stdout/stderr to a new console window
     win32_console_attach:          bool; // if true, attach stdout/stderr to parent process
@@ -583,71 +832,73 @@ sapp_desc :: struct {
     assert(size_of(type_of(sapp_desc.cleanup_cb)) == 8, "sapp_desc.cleanup_cb has unexpected size % instead of 8", size_of(type_of(sapp_desc.cleanup_cb)));
     assert(((cast(*void)(*instance.event_cb)) - cast(*void)(*instance)) == 24, "sapp_desc.event_cb has unexpected offset % instead of 24", ((cast(*void)(*instance.event_cb)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.event_cb)) == 8, "sapp_desc.event_cb has unexpected size % instead of 8", size_of(type_of(sapp_desc.event_cb)));
-    assert(((cast(*void)(*instance.fail_cb)) - cast(*void)(*instance)) == 32, "sapp_desc.fail_cb has unexpected offset % instead of 32", ((cast(*void)(*instance.fail_cb)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sapp_desc.fail_cb)) == 8, "sapp_desc.fail_cb has unexpected size % instead of 8", size_of(type_of(sapp_desc.fail_cb)));
-    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 40, "sapp_desc.user_data has unexpected offset % instead of 40", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 32, "sapp_desc.user_data has unexpected offset % instead of 32", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.user_data)) == 8, "sapp_desc.user_data has unexpected size % instead of 8", size_of(type_of(sapp_desc.user_data)));
-    assert(((cast(*void)(*instance.init_userdata_cb)) - cast(*void)(*instance)) == 48, "sapp_desc.init_userdata_cb has unexpected offset % instead of 48", ((cast(*void)(*instance.init_userdata_cb)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.init_userdata_cb)) - cast(*void)(*instance)) == 40, "sapp_desc.init_userdata_cb has unexpected offset % instead of 40", ((cast(*void)(*instance.init_userdata_cb)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.init_userdata_cb)) == 8, "sapp_desc.init_userdata_cb has unexpected size % instead of 8", size_of(type_of(sapp_desc.init_userdata_cb)));
-    assert(((cast(*void)(*instance.frame_userdata_cb)) - cast(*void)(*instance)) == 56, "sapp_desc.frame_userdata_cb has unexpected offset % instead of 56", ((cast(*void)(*instance.frame_userdata_cb)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.frame_userdata_cb)) - cast(*void)(*instance)) == 48, "sapp_desc.frame_userdata_cb has unexpected offset % instead of 48", ((cast(*void)(*instance.frame_userdata_cb)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.frame_userdata_cb)) == 8, "sapp_desc.frame_userdata_cb has unexpected size % instead of 8", size_of(type_of(sapp_desc.frame_userdata_cb)));
-    assert(((cast(*void)(*instance.cleanup_userdata_cb)) - cast(*void)(*instance)) == 64, "sapp_desc.cleanup_userdata_cb has unexpected offset % instead of 64", ((cast(*void)(*instance.cleanup_userdata_cb)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.cleanup_userdata_cb)) - cast(*void)(*instance)) == 56, "sapp_desc.cleanup_userdata_cb has unexpected offset % instead of 56", ((cast(*void)(*instance.cleanup_userdata_cb)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.cleanup_userdata_cb)) == 8, "sapp_desc.cleanup_userdata_cb has unexpected size % instead of 8", size_of(type_of(sapp_desc.cleanup_userdata_cb)));
-    assert(((cast(*void)(*instance.event_userdata_cb)) - cast(*void)(*instance)) == 72, "sapp_desc.event_userdata_cb has unexpected offset % instead of 72", ((cast(*void)(*instance.event_userdata_cb)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.event_userdata_cb)) - cast(*void)(*instance)) == 64, "sapp_desc.event_userdata_cb has unexpected offset % instead of 64", ((cast(*void)(*instance.event_userdata_cb)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.event_userdata_cb)) == 8, "sapp_desc.event_userdata_cb has unexpected size % instead of 8", size_of(type_of(sapp_desc.event_userdata_cb)));
-    assert(((cast(*void)(*instance.fail_userdata_cb)) - cast(*void)(*instance)) == 80, "sapp_desc.fail_userdata_cb has unexpected offset % instead of 80", ((cast(*void)(*instance.fail_userdata_cb)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sapp_desc.fail_userdata_cb)) == 8, "sapp_desc.fail_userdata_cb has unexpected size % instead of 8", size_of(type_of(sapp_desc.fail_userdata_cb)));
-    assert(((cast(*void)(*instance.width)) - cast(*void)(*instance)) == 88, "sapp_desc.width has unexpected offset % instead of 88", ((cast(*void)(*instance.width)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.width)) - cast(*void)(*instance)) == 72, "sapp_desc.width has unexpected offset % instead of 72", ((cast(*void)(*instance.width)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.width)) == 4, "sapp_desc.width has unexpected size % instead of 4", size_of(type_of(sapp_desc.width)));
-    assert(((cast(*void)(*instance.height)) - cast(*void)(*instance)) == 92, "sapp_desc.height has unexpected offset % instead of 92", ((cast(*void)(*instance.height)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.height)) - cast(*void)(*instance)) == 76, "sapp_desc.height has unexpected offset % instead of 76", ((cast(*void)(*instance.height)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.height)) == 4, "sapp_desc.height has unexpected size % instead of 4", size_of(type_of(sapp_desc.height)));
-    assert(((cast(*void)(*instance.sample_count)) - cast(*void)(*instance)) == 96, "sapp_desc.sample_count has unexpected offset % instead of 96", ((cast(*void)(*instance.sample_count)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.sample_count)) - cast(*void)(*instance)) == 80, "sapp_desc.sample_count has unexpected offset % instead of 80", ((cast(*void)(*instance.sample_count)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.sample_count)) == 4, "sapp_desc.sample_count has unexpected size % instead of 4", size_of(type_of(sapp_desc.sample_count)));
-    assert(((cast(*void)(*instance.swap_interval)) - cast(*void)(*instance)) == 100, "sapp_desc.swap_interval has unexpected offset % instead of 100", ((cast(*void)(*instance.swap_interval)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.swap_interval)) - cast(*void)(*instance)) == 84, "sapp_desc.swap_interval has unexpected offset % instead of 84", ((cast(*void)(*instance.swap_interval)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.swap_interval)) == 4, "sapp_desc.swap_interval has unexpected size % instead of 4", size_of(type_of(sapp_desc.swap_interval)));
-    assert(((cast(*void)(*instance.high_dpi)) - cast(*void)(*instance)) == 104, "sapp_desc.high_dpi has unexpected offset % instead of 104", ((cast(*void)(*instance.high_dpi)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.high_dpi)) - cast(*void)(*instance)) == 88, "sapp_desc.high_dpi has unexpected offset % instead of 88", ((cast(*void)(*instance.high_dpi)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.high_dpi)) == 1, "sapp_desc.high_dpi has unexpected size % instead of 1", size_of(type_of(sapp_desc.high_dpi)));
-    assert(((cast(*void)(*instance.fullscreen)) - cast(*void)(*instance)) == 105, "sapp_desc.fullscreen has unexpected offset % instead of 105", ((cast(*void)(*instance.fullscreen)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.fullscreen)) - cast(*void)(*instance)) == 89, "sapp_desc.fullscreen has unexpected offset % instead of 89", ((cast(*void)(*instance.fullscreen)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.fullscreen)) == 1, "sapp_desc.fullscreen has unexpected size % instead of 1", size_of(type_of(sapp_desc.fullscreen)));
-    assert(((cast(*void)(*instance.alpha)) - cast(*void)(*instance)) == 106, "sapp_desc.alpha has unexpected offset % instead of 106", ((cast(*void)(*instance.alpha)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.alpha)) - cast(*void)(*instance)) == 90, "sapp_desc.alpha has unexpected offset % instead of 90", ((cast(*void)(*instance.alpha)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.alpha)) == 1, "sapp_desc.alpha has unexpected size % instead of 1", size_of(type_of(sapp_desc.alpha)));
-    assert(((cast(*void)(*instance.window_title)) - cast(*void)(*instance)) == 112, "sapp_desc.window_title has unexpected offset % instead of 112", ((cast(*void)(*instance.window_title)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.window_title)) - cast(*void)(*instance)) == 96, "sapp_desc.window_title has unexpected offset % instead of 96", ((cast(*void)(*instance.window_title)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.window_title)) == 8, "sapp_desc.window_title has unexpected size % instead of 8", size_of(type_of(sapp_desc.window_title)));
-    assert(((cast(*void)(*instance.user_cursor)) - cast(*void)(*instance)) == 120, "sapp_desc.user_cursor has unexpected offset % instead of 120", ((cast(*void)(*instance.user_cursor)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sapp_desc.user_cursor)) == 1, "sapp_desc.user_cursor has unexpected size % instead of 1", size_of(type_of(sapp_desc.user_cursor)));
-    assert(((cast(*void)(*instance.enable_clipboard)) - cast(*void)(*instance)) == 121, "sapp_desc.enable_clipboard has unexpected offset % instead of 121", ((cast(*void)(*instance.enable_clipboard)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.enable_clipboard)) - cast(*void)(*instance)) == 104, "sapp_desc.enable_clipboard has unexpected offset % instead of 104", ((cast(*void)(*instance.enable_clipboard)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.enable_clipboard)) == 1, "sapp_desc.enable_clipboard has unexpected size % instead of 1", size_of(type_of(sapp_desc.enable_clipboard)));
-    assert(((cast(*void)(*instance.clipboard_size)) - cast(*void)(*instance)) == 124, "sapp_desc.clipboard_size has unexpected offset % instead of 124", ((cast(*void)(*instance.clipboard_size)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.clipboard_size)) - cast(*void)(*instance)) == 108, "sapp_desc.clipboard_size has unexpected offset % instead of 108", ((cast(*void)(*instance.clipboard_size)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.clipboard_size)) == 4, "sapp_desc.clipboard_size has unexpected size % instead of 4", size_of(type_of(sapp_desc.clipboard_size)));
-    assert(((cast(*void)(*instance.enable_dragndrop)) - cast(*void)(*instance)) == 128, "sapp_desc.enable_dragndrop has unexpected offset % instead of 128", ((cast(*void)(*instance.enable_dragndrop)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.enable_dragndrop)) - cast(*void)(*instance)) == 112, "sapp_desc.enable_dragndrop has unexpected offset % instead of 112", ((cast(*void)(*instance.enable_dragndrop)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.enable_dragndrop)) == 1, "sapp_desc.enable_dragndrop has unexpected size % instead of 1", size_of(type_of(sapp_desc.enable_dragndrop)));
-    assert(((cast(*void)(*instance.max_dropped_files)) - cast(*void)(*instance)) == 132, "sapp_desc.max_dropped_files has unexpected offset % instead of 132", ((cast(*void)(*instance.max_dropped_files)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.max_dropped_files)) - cast(*void)(*instance)) == 116, "sapp_desc.max_dropped_files has unexpected offset % instead of 116", ((cast(*void)(*instance.max_dropped_files)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.max_dropped_files)) == 4, "sapp_desc.max_dropped_files has unexpected size % instead of 4", size_of(type_of(sapp_desc.max_dropped_files)));
-    assert(((cast(*void)(*instance.max_dropped_file_path_length)) - cast(*void)(*instance)) == 136, "sapp_desc.max_dropped_file_path_length has unexpected offset % instead of 136", ((cast(*void)(*instance.max_dropped_file_path_length)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.max_dropped_file_path_length)) - cast(*void)(*instance)) == 120, "sapp_desc.max_dropped_file_path_length has unexpected offset % instead of 120", ((cast(*void)(*instance.max_dropped_file_path_length)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.max_dropped_file_path_length)) == 4, "sapp_desc.max_dropped_file_path_length has unexpected size % instead of 4", size_of(type_of(sapp_desc.max_dropped_file_path_length)));
-    assert(((cast(*void)(*instance.icon)) - cast(*void)(*instance)) == 144, "sapp_desc.icon has unexpected offset % instead of 144", ((cast(*void)(*instance.icon)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.icon)) - cast(*void)(*instance)) == 128, "sapp_desc.icon has unexpected offset % instead of 128", ((cast(*void)(*instance.icon)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.icon)) == 200, "sapp_desc.icon has unexpected size % instead of 200", size_of(type_of(sapp_desc.icon)));
-    assert(((cast(*void)(*instance.gl_force_gles2)) - cast(*void)(*instance)) == 344, "sapp_desc.gl_force_gles2 has unexpected offset % instead of 344", ((cast(*void)(*instance.gl_force_gles2)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.allocator)) - cast(*void)(*instance)) == 328, "sapp_desc.allocator has unexpected offset % instead of 328", ((cast(*void)(*instance.allocator)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_desc.allocator)) == 24, "sapp_desc.allocator has unexpected size % instead of 24", size_of(type_of(sapp_desc.allocator)));
+    assert(((cast(*void)(*instance.logger)) - cast(*void)(*instance)) == 352, "sapp_desc.logger has unexpected offset % instead of 352", ((cast(*void)(*instance.logger)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_desc.logger)) == 16, "sapp_desc.logger has unexpected size % instead of 16", size_of(type_of(sapp_desc.logger)));
+    assert(((cast(*void)(*instance.gl_force_gles2)) - cast(*void)(*instance)) == 368, "sapp_desc.gl_force_gles2 has unexpected offset % instead of 368", ((cast(*void)(*instance.gl_force_gles2)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.gl_force_gles2)) == 1, "sapp_desc.gl_force_gles2 has unexpected size % instead of 1", size_of(type_of(sapp_desc.gl_force_gles2)));
-    assert(((cast(*void)(*instance.win32_console_utf8)) - cast(*void)(*instance)) == 345, "sapp_desc.win32_console_utf8 has unexpected offset % instead of 345", ((cast(*void)(*instance.win32_console_utf8)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.gl_major_version)) - cast(*void)(*instance)) == 372, "sapp_desc.gl_major_version has unexpected offset % instead of 372", ((cast(*void)(*instance.gl_major_version)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_desc.gl_major_version)) == 4, "sapp_desc.gl_major_version has unexpected size % instead of 4", size_of(type_of(sapp_desc.gl_major_version)));
+    assert(((cast(*void)(*instance.gl_minor_version)) - cast(*void)(*instance)) == 376, "sapp_desc.gl_minor_version has unexpected offset % instead of 376", ((cast(*void)(*instance.gl_minor_version)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_desc.gl_minor_version)) == 4, "sapp_desc.gl_minor_version has unexpected size % instead of 4", size_of(type_of(sapp_desc.gl_minor_version)));
+    assert(((cast(*void)(*instance.win32_console_utf8)) - cast(*void)(*instance)) == 380, "sapp_desc.win32_console_utf8 has unexpected offset % instead of 380", ((cast(*void)(*instance.win32_console_utf8)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.win32_console_utf8)) == 1, "sapp_desc.win32_console_utf8 has unexpected size % instead of 1", size_of(type_of(sapp_desc.win32_console_utf8)));
-    assert(((cast(*void)(*instance.win32_console_create)) - cast(*void)(*instance)) == 346, "sapp_desc.win32_console_create has unexpected offset % instead of 346", ((cast(*void)(*instance.win32_console_create)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.win32_console_create)) - cast(*void)(*instance)) == 381, "sapp_desc.win32_console_create has unexpected offset % instead of 381", ((cast(*void)(*instance.win32_console_create)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.win32_console_create)) == 1, "sapp_desc.win32_console_create has unexpected size % instead of 1", size_of(type_of(sapp_desc.win32_console_create)));
-    assert(((cast(*void)(*instance.win32_console_attach)) - cast(*void)(*instance)) == 347, "sapp_desc.win32_console_attach has unexpected offset % instead of 347", ((cast(*void)(*instance.win32_console_attach)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.win32_console_attach)) - cast(*void)(*instance)) == 382, "sapp_desc.win32_console_attach has unexpected offset % instead of 382", ((cast(*void)(*instance.win32_console_attach)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.win32_console_attach)) == 1, "sapp_desc.win32_console_attach has unexpected size % instead of 1", size_of(type_of(sapp_desc.win32_console_attach)));
-    assert(((cast(*void)(*instance.html5_canvas_name)) - cast(*void)(*instance)) == 352, "sapp_desc.html5_canvas_name has unexpected offset % instead of 352", ((cast(*void)(*instance.html5_canvas_name)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.html5_canvas_name)) - cast(*void)(*instance)) == 384, "sapp_desc.html5_canvas_name has unexpected offset % instead of 384", ((cast(*void)(*instance.html5_canvas_name)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.html5_canvas_name)) == 8, "sapp_desc.html5_canvas_name has unexpected size % instead of 8", size_of(type_of(sapp_desc.html5_canvas_name)));
-    assert(((cast(*void)(*instance.html5_canvas_resize)) - cast(*void)(*instance)) == 360, "sapp_desc.html5_canvas_resize has unexpected offset % instead of 360", ((cast(*void)(*instance.html5_canvas_resize)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.html5_canvas_resize)) - cast(*void)(*instance)) == 392, "sapp_desc.html5_canvas_resize has unexpected offset % instead of 392", ((cast(*void)(*instance.html5_canvas_resize)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.html5_canvas_resize)) == 1, "sapp_desc.html5_canvas_resize has unexpected size % instead of 1", size_of(type_of(sapp_desc.html5_canvas_resize)));
-    assert(((cast(*void)(*instance.html5_preserve_drawing_buffer)) - cast(*void)(*instance)) == 361, "sapp_desc.html5_preserve_drawing_buffer has unexpected offset % instead of 361", ((cast(*void)(*instance.html5_preserve_drawing_buffer)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.html5_preserve_drawing_buffer)) - cast(*void)(*instance)) == 393, "sapp_desc.html5_preserve_drawing_buffer has unexpected offset % instead of 393", ((cast(*void)(*instance.html5_preserve_drawing_buffer)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.html5_preserve_drawing_buffer)) == 1, "sapp_desc.html5_preserve_drawing_buffer has unexpected size % instead of 1", size_of(type_of(sapp_desc.html5_preserve_drawing_buffer)));
-    assert(((cast(*void)(*instance.html5_premultiplied_alpha)) - cast(*void)(*instance)) == 362, "sapp_desc.html5_premultiplied_alpha has unexpected offset % instead of 362", ((cast(*void)(*instance.html5_premultiplied_alpha)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.html5_premultiplied_alpha)) - cast(*void)(*instance)) == 394, "sapp_desc.html5_premultiplied_alpha has unexpected offset % instead of 394", ((cast(*void)(*instance.html5_premultiplied_alpha)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.html5_premultiplied_alpha)) == 1, "sapp_desc.html5_premultiplied_alpha has unexpected size % instead of 1", size_of(type_of(sapp_desc.html5_premultiplied_alpha)));
-    assert(((cast(*void)(*instance.html5_ask_leave_site)) - cast(*void)(*instance)) == 363, "sapp_desc.html5_ask_leave_site has unexpected offset % instead of 363", ((cast(*void)(*instance.html5_ask_leave_site)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.html5_ask_leave_site)) - cast(*void)(*instance)) == 395, "sapp_desc.html5_ask_leave_site has unexpected offset % instead of 395", ((cast(*void)(*instance.html5_ask_leave_site)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.html5_ask_leave_site)) == 1, "sapp_desc.html5_ask_leave_site has unexpected size % instead of 1", size_of(type_of(sapp_desc.html5_ask_leave_site)));
-    assert(((cast(*void)(*instance.ios_keyboard_resizes_canvas)) - cast(*void)(*instance)) == 364, "sapp_desc.ios_keyboard_resizes_canvas has unexpected offset % instead of 364", ((cast(*void)(*instance.ios_keyboard_resizes_canvas)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.ios_keyboard_resizes_canvas)) - cast(*void)(*instance)) == 396, "sapp_desc.ios_keyboard_resizes_canvas has unexpected offset % instead of 396", ((cast(*void)(*instance.ios_keyboard_resizes_canvas)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_desc.ios_keyboard_resizes_canvas)) == 1, "sapp_desc.ios_keyboard_resizes_canvas has unexpected size % instead of 1", size_of(type_of(sapp_desc.ios_keyboard_resizes_canvas)));
-    assert(size_of(sapp_desc) == 368, "sapp_desc has size % instead of 368", size_of(sapp_desc));
+    assert(size_of(sapp_desc) == 400, "sapp_desc has size % instead of 400", size_of(sapp_desc));
 }
 
 /* HTML5 specific: request and response structs for
@@ -664,13 +915,12 @@ sapp_html5_fetch_error :: enum u32 {
 }
 
 sapp_html5_fetch_response :: struct {
-    succeeded:    bool; /* true if the loading operation has succeeded */
-    error_code:   sapp_html5_fetch_error;
-    file_index:   s32; /* index of the dropped file (0..sapp_get_num_dropped_filed()-1) */
-    fetched_size: u32; /* size in bytes of loaded data */
-    buffer_ptr:   *void; /* pointer to user-provided buffer which contains the loaded data */
-    buffer_size:  u32; /* size of user-provided buffer (buffer_size >= fetched_size) */
-    user_data:    *void; /* user-provided user data pointer */
+    succeeded:  bool; // true if the loading operation has succeeded
+    error_code: sapp_html5_fetch_error;
+    file_index: s32; // index of the dropped file (0..sapp_get_num_dropped_filed()-1)
+    data:       sapp_range; // pointer and size of the fetched data (data.ptr == buffer.ptr, data.size <= buffer.size)
+    buffer:     sapp_range; // the user-provided buffer ptr/size pair (buffer.ptr == data.ptr, buffer.size >= data.size)
+    user_data:  *void; // user-provided user data pointer
 }
 #run {
     instance: sapp_html5_fetch_response;
@@ -680,23 +930,20 @@ sapp_html5_fetch_response :: struct {
     assert(size_of(type_of(sapp_html5_fetch_response.error_code)) == 4, "sapp_html5_fetch_response.error_code has unexpected size % instead of 4", size_of(type_of(sapp_html5_fetch_response.error_code)));
     assert(((cast(*void)(*instance.file_index)) - cast(*void)(*instance)) == 8, "sapp_html5_fetch_response.file_index has unexpected offset % instead of 8", ((cast(*void)(*instance.file_index)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_html5_fetch_response.file_index)) == 4, "sapp_html5_fetch_response.file_index has unexpected size % instead of 4", size_of(type_of(sapp_html5_fetch_response.file_index)));
-    assert(((cast(*void)(*instance.fetched_size)) - cast(*void)(*instance)) == 12, "sapp_html5_fetch_response.fetched_size has unexpected offset % instead of 12", ((cast(*void)(*instance.fetched_size)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sapp_html5_fetch_response.fetched_size)) == 4, "sapp_html5_fetch_response.fetched_size has unexpected size % instead of 4", size_of(type_of(sapp_html5_fetch_response.fetched_size)));
-    assert(((cast(*void)(*instance.buffer_ptr)) - cast(*void)(*instance)) == 16, "sapp_html5_fetch_response.buffer_ptr has unexpected offset % instead of 16", ((cast(*void)(*instance.buffer_ptr)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sapp_html5_fetch_response.buffer_ptr)) == 8, "sapp_html5_fetch_response.buffer_ptr has unexpected size % instead of 8", size_of(type_of(sapp_html5_fetch_response.buffer_ptr)));
-    assert(((cast(*void)(*instance.buffer_size)) - cast(*void)(*instance)) == 24, "sapp_html5_fetch_response.buffer_size has unexpected offset % instead of 24", ((cast(*void)(*instance.buffer_size)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sapp_html5_fetch_response.buffer_size)) == 4, "sapp_html5_fetch_response.buffer_size has unexpected size % instead of 4", size_of(type_of(sapp_html5_fetch_response.buffer_size)));
-    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 32, "sapp_html5_fetch_response.user_data has unexpected offset % instead of 32", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.data)) - cast(*void)(*instance)) == 16, "sapp_html5_fetch_response.data has unexpected offset % instead of 16", ((cast(*void)(*instance.data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_html5_fetch_response.data)) == 16, "sapp_html5_fetch_response.data has unexpected size % instead of 16", size_of(type_of(sapp_html5_fetch_response.data)));
+    assert(((cast(*void)(*instance.buffer)) - cast(*void)(*instance)) == 32, "sapp_html5_fetch_response.buffer has unexpected offset % instead of 32", ((cast(*void)(*instance.buffer)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_html5_fetch_response.buffer)) == 16, "sapp_html5_fetch_response.buffer has unexpected size % instead of 16", size_of(type_of(sapp_html5_fetch_response.buffer)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 48, "sapp_html5_fetch_response.user_data has unexpected offset % instead of 48", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_html5_fetch_response.user_data)) == 8, "sapp_html5_fetch_response.user_data has unexpected size % instead of 8", size_of(type_of(sapp_html5_fetch_response.user_data)));
-    assert(size_of(sapp_html5_fetch_response) == 40, "sapp_html5_fetch_response has size % instead of 40", size_of(sapp_html5_fetch_response));
+    assert(size_of(sapp_html5_fetch_response) == 56, "sapp_html5_fetch_response has size % instead of 56", size_of(sapp_html5_fetch_response));
 }
 
 sapp_html5_fetch_request :: struct {
-    dropped_file_index: s32; /* 0..sapp_get_num_dropped_files()-1 */
-    callback:           #type (unknown0: *sapp_html5_fetch_response) -> void #c_call; /* response callback function pointer (required) */
-    buffer_ptr:         *void; /* pointer to buffer to load data into */
-    buffer_size:        u32; /* size in bytes of buffer */
-    user_data:          *void; /* optional userdata pointer */
+    dropped_file_index: s32; // 0..sapp_get_num_dropped_files()-1
+    callback:           #type (unknown0: *sapp_html5_fetch_response) -> void #c_call; // response callback function pointer (required)
+    buffer:             sapp_range; // ptr/size of a memory buffer to load the data into
+    user_data:          *void; // optional userdata pointer
 }
 #run {
     instance: sapp_html5_fetch_request;
@@ -704,13 +951,32 @@ sapp_html5_fetch_request :: struct {
     assert(size_of(type_of(sapp_html5_fetch_request.dropped_file_index)) == 4, "sapp_html5_fetch_request.dropped_file_index has unexpected size % instead of 4", size_of(type_of(sapp_html5_fetch_request.dropped_file_index)));
     assert(((cast(*void)(*instance.callback)) - cast(*void)(*instance)) == 8, "sapp_html5_fetch_request.callback has unexpected offset % instead of 8", ((cast(*void)(*instance.callback)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_html5_fetch_request.callback)) == 8, "sapp_html5_fetch_request.callback has unexpected size % instead of 8", size_of(type_of(sapp_html5_fetch_request.callback)));
-    assert(((cast(*void)(*instance.buffer_ptr)) - cast(*void)(*instance)) == 16, "sapp_html5_fetch_request.buffer_ptr has unexpected offset % instead of 16", ((cast(*void)(*instance.buffer_ptr)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sapp_html5_fetch_request.buffer_ptr)) == 8, "sapp_html5_fetch_request.buffer_ptr has unexpected size % instead of 8", size_of(type_of(sapp_html5_fetch_request.buffer_ptr)));
-    assert(((cast(*void)(*instance.buffer_size)) - cast(*void)(*instance)) == 24, "sapp_html5_fetch_request.buffer_size has unexpected offset % instead of 24", ((cast(*void)(*instance.buffer_size)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sapp_html5_fetch_request.buffer_size)) == 4, "sapp_html5_fetch_request.buffer_size has unexpected size % instead of 4", size_of(type_of(sapp_html5_fetch_request.buffer_size)));
+    assert(((cast(*void)(*instance.buffer)) - cast(*void)(*instance)) == 16, "sapp_html5_fetch_request.buffer has unexpected offset % instead of 16", ((cast(*void)(*instance.buffer)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sapp_html5_fetch_request.buffer)) == 16, "sapp_html5_fetch_request.buffer has unexpected size % instead of 16", size_of(type_of(sapp_html5_fetch_request.buffer)));
     assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 32, "sapp_html5_fetch_request.user_data has unexpected offset % instead of 32", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
     assert(size_of(type_of(sapp_html5_fetch_request.user_data)) == 8, "sapp_html5_fetch_request.user_data has unexpected size % instead of 8", size_of(type_of(sapp_html5_fetch_request.user_data)));
     assert(size_of(sapp_html5_fetch_request) == 40, "sapp_html5_fetch_request has size % instead of 40", size_of(sapp_html5_fetch_request));
+}
+
+/*
+sapp_mouse_cursor
+
+Predefined cursor image definitions, set with sapp_set_mouse_cursor(sapp_mouse_cursor cursor)
+*/
+sapp_mouse_cursor :: enum u32 {
+    SAPP_MOUSECURSOR_DEFAULT       :: 0;
+    SAPP_MOUSECURSOR_ARROW         :: 1;
+    SAPP_MOUSECURSOR_IBEAM         :: 2;
+    SAPP_MOUSECURSOR_CROSSHAIR     :: 3;
+    SAPP_MOUSECURSOR_POINTING_HAND :: 4;
+    SAPP_MOUSECURSOR_RESIZE_EW     :: 5;
+    SAPP_MOUSECURSOR_RESIZE_NS     :: 6;
+    SAPP_MOUSECURSOR_RESIZE_NWSE   :: 7;
+    SAPP_MOUSECURSOR_RESIZE_NESW   :: 8;
+    SAPP_MOUSECURSOR_RESIZE_ALL    :: 9;
+    SAPP_MOUSECURSOR_NOT_ALLOWED   :: 10;
+    SAPP_MOUSECURSOR_NUM           :: 11;
+    _SAPP_MOUSECURSOR_NUM :: SAPP_MOUSECURSOR_NUM;
 }
 
 /* user-provided functions */
@@ -762,13 +1028,19 @@ sapp_toggle_fullscreen :: () -> void #foreign sokol_app;
 sapp_show_mouse :: (show: bool) -> void #foreign sokol_app;
 
 /* show or hide the mouse cursor */
-sapp_mouse_shown :: (__args: ..Any) -> bool #foreign sokol_app;
+sapp_mouse_shown :: () -> bool #foreign sokol_app;
 
 /* enable/disable mouse-pointer-lock mode */
 sapp_lock_mouse :: (lock: bool) -> void #foreign sokol_app;
 
 /* return true if in mouse-pointer-lock mode (this may toggle a few frames later) */
 sapp_mouse_locked :: () -> bool #foreign sokol_app;
+
+/* set mouse cursor type */
+sapp_set_mouse_cursor :: (cursor: sapp_mouse_cursor) -> void #foreign sokol_app;
+
+/* get current mouse cursor type */
+sapp_get_mouse_cursor :: () -> sapp_mouse_cursor #foreign sokol_app;
 
 /* return the userdata pointer optionally provided in sapp_desc */
 sapp_userdata :: () -> *void #foreign sokol_app;
@@ -791,6 +1063,9 @@ sapp_consume_event :: () -> void #foreign sokol_app;
 /* get the current frame counter (for comparison with sapp_event.frame_count) */
 sapp_frame_count :: () -> u64 #foreign sokol_app;
 
+/* get an averaged/smoothed frame duration in seconds */
+sapp_frame_duration :: () -> float64 #foreign sokol_app;
+
 /* write string into clipboard */
 sapp_set_clipboard_string :: (str: *u8) -> void #foreign sokol_app;
 
@@ -811,6 +1086,12 @@ sapp_get_dropped_file_path :: (index: s32) -> *u8 #foreign sokol_app;
 
 /* special run-function for SOKOL_NO_ENTRY (in standard mode this is an empty stub) */
 sapp_run :: (desc: *sapp_desc) -> void #foreign sokol_app;
+
+/* EGL: get EGLDisplay object */
+sapp_egl_get_display :: () -> *void #foreign sokol_app;
+
+/* EGL: get EGLContext object */
+sapp_egl_get_context :: () -> *void #foreign sokol_app;
 
 /* GL: return true when GLES2 fallback is active (to detect fallback from GLES3) */
 sapp_gles2 :: () -> bool #foreign sokol_app;

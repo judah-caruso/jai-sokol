@@ -267,50 +267,53 @@ sg_pixel_format :: enum u32 {
     SG_PIXELFORMAT_RG16SI          :: 21;
     SG_PIXELFORMAT_RG16F           :: 22;
     SG_PIXELFORMAT_RGBA8           :: 23;
-    SG_PIXELFORMAT_RGBA8SN         :: 24;
-    SG_PIXELFORMAT_RGBA8UI         :: 25;
-    SG_PIXELFORMAT_RGBA8SI         :: 26;
-    SG_PIXELFORMAT_BGRA8           :: 27;
-    SG_PIXELFORMAT_RGB10A2         :: 28;
-    SG_PIXELFORMAT_RG11B10F        :: 29;
+    SG_PIXELFORMAT_SRGB8A8         :: 24;
+    SG_PIXELFORMAT_RGBA8SN         :: 25;
+    SG_PIXELFORMAT_RGBA8UI         :: 26;
+    SG_PIXELFORMAT_RGBA8SI         :: 27;
+    SG_PIXELFORMAT_BGRA8           :: 28;
+    SG_PIXELFORMAT_RGB10A2         :: 29;
+    SG_PIXELFORMAT_RG11B10F        :: 30;
 
-    SG_PIXELFORMAT_RG32UI          :: 30;
-    SG_PIXELFORMAT_RG32SI          :: 31;
-    SG_PIXELFORMAT_RG32F           :: 32;
-    SG_PIXELFORMAT_RGBA16          :: 33;
-    SG_PIXELFORMAT_RGBA16SN        :: 34;
-    SG_PIXELFORMAT_RGBA16UI        :: 35;
-    SG_PIXELFORMAT_RGBA16SI        :: 36;
-    SG_PIXELFORMAT_RGBA16F         :: 37;
+    SG_PIXELFORMAT_RG32UI          :: 31;
+    SG_PIXELFORMAT_RG32SI          :: 32;
+    SG_PIXELFORMAT_RG32F           :: 33;
+    SG_PIXELFORMAT_RGBA16          :: 34;
+    SG_PIXELFORMAT_RGBA16SN        :: 35;
+    SG_PIXELFORMAT_RGBA16UI        :: 36;
+    SG_PIXELFORMAT_RGBA16SI        :: 37;
+    SG_PIXELFORMAT_RGBA16F         :: 38;
 
-    SG_PIXELFORMAT_RGBA32UI        :: 38;
-    SG_PIXELFORMAT_RGBA32SI        :: 39;
-    SG_PIXELFORMAT_RGBA32F         :: 40;
+    SG_PIXELFORMAT_RGBA32UI        :: 39;
+    SG_PIXELFORMAT_RGBA32SI        :: 40;
+    SG_PIXELFORMAT_RGBA32F         :: 41;
 
-    SG_PIXELFORMAT_DEPTH           :: 41;
-    SG_PIXELFORMAT_DEPTH_STENCIL   :: 42;
+    SG_PIXELFORMAT_DEPTH           :: 42;
+    SG_PIXELFORMAT_DEPTH_STENCIL   :: 43;
 
-    SG_PIXELFORMAT_BC1_RGBA        :: 43;
-    SG_PIXELFORMAT_BC2_RGBA        :: 44;
-    SG_PIXELFORMAT_BC3_RGBA        :: 45;
-    SG_PIXELFORMAT_BC4_R           :: 46;
-    SG_PIXELFORMAT_BC4_RSN         :: 47;
-    SG_PIXELFORMAT_BC5_RG          :: 48;
-    SG_PIXELFORMAT_BC5_RGSN        :: 49;
-    SG_PIXELFORMAT_BC6H_RGBF       :: 50;
-    SG_PIXELFORMAT_BC6H_RGBUF      :: 51;
-    SG_PIXELFORMAT_BC7_RGBA        :: 52;
-    SG_PIXELFORMAT_PVRTC_RGB_2BPP  :: 53;
-    SG_PIXELFORMAT_PVRTC_RGB_4BPP  :: 54;
-    SG_PIXELFORMAT_PVRTC_RGBA_2BPP :: 55;
-    SG_PIXELFORMAT_PVRTC_RGBA_4BPP :: 56;
-    SG_PIXELFORMAT_ETC2_RGB8       :: 57;
-    SG_PIXELFORMAT_ETC2_RGB8A1     :: 58;
-    SG_PIXELFORMAT_ETC2_RGBA8      :: 59;
-    SG_PIXELFORMAT_ETC2_RG11       :: 60;
-    SG_PIXELFORMAT_ETC2_RG11SN     :: 61;
+    SG_PIXELFORMAT_BC1_RGBA        :: 44;
+    SG_PIXELFORMAT_BC2_RGBA        :: 45;
+    SG_PIXELFORMAT_BC3_RGBA        :: 46;
+    SG_PIXELFORMAT_BC4_R           :: 47;
+    SG_PIXELFORMAT_BC4_RSN         :: 48;
+    SG_PIXELFORMAT_BC5_RG          :: 49;
+    SG_PIXELFORMAT_BC5_RGSN        :: 50;
+    SG_PIXELFORMAT_BC6H_RGBF       :: 51;
+    SG_PIXELFORMAT_BC6H_RGBUF      :: 52;
+    SG_PIXELFORMAT_BC7_RGBA        :: 53;
+    SG_PIXELFORMAT_PVRTC_RGB_2BPP  :: 54;
+    SG_PIXELFORMAT_PVRTC_RGB_4BPP  :: 55;
+    SG_PIXELFORMAT_PVRTC_RGBA_2BPP :: 56;
+    SG_PIXELFORMAT_PVRTC_RGBA_4BPP :: 57;
+    SG_PIXELFORMAT_ETC2_RGB8       :: 58;
+    SG_PIXELFORMAT_ETC2_RGB8A1     :: 59;
+    SG_PIXELFORMAT_ETC2_RGBA8      :: 60;
+    SG_PIXELFORMAT_ETC2_RG11       :: 61;
+    SG_PIXELFORMAT_ETC2_RG11SN     :: 62;
 
-    SG_PIXELFORMAT_NUM             :: 62;
+    SG_PIXELFORMAT_RGB9E5          :: 63;
+
+    SG_PIXELFORMAT_NUM             :: 64;
     SG_PIXELFORMAT_FORCE_U32       :: 2147483647;
 
     _SG_PIXELFORMAT_DEFAULT   :: SG_PIXELFORMAT_DEFAULT;
@@ -390,13 +393,14 @@ sg_features :: struct {
 Runtime information about resource limits, returned by sg_query_limit()
 */
 sg_limits :: struct {
-    max_image_size_2d:             s32; // max width/height of SG_IMAGETYPE_2D images
-    max_image_size_cube:           s32; // max width/height of SG_IMAGETYPE_CUBE images
-    max_image_size_3d:             s32; // max width/height/depth of SG_IMAGETYPE_3D images
-    max_image_size_array:          s32; // max width/height of SG_IMAGETYPE_ARRAY images
-    max_image_array_layers:        s32; // max number of layers in SG_IMAGETYPE_ARRAY images
-    max_vertex_attrs:              s32; // <= SG_MAX_VERTEX_ATTRIBUTES or less (on some GLES2 impls)
-    gl_max_vertex_uniform_vectors: s32; // <= GL_MAX_VERTEX_UNIFORM_VECTORS (only on GL backends)
+    max_image_size_2d:                   s32; // max width/height of SG_IMAGETYPE_2D images
+    max_image_size_cube:                 s32; // max width/height of SG_IMAGETYPE_CUBE images
+    max_image_size_3d:                   s32; // max width/height/depth of SG_IMAGETYPE_3D images
+    max_image_size_array:                s32; // max width/height of SG_IMAGETYPE_ARRAY images
+    max_image_array_layers:              s32; // max number of layers in SG_IMAGETYPE_ARRAY images
+    max_vertex_attrs:                    s32; // <= SG_MAX_VERTEX_ATTRIBUTES or less (on some GLES2 impls)
+    gl_max_vertex_uniform_vectors:       s32; // <= GL_MAX_VERTEX_UNIFORM_VECTORS (only on GL backends)
+    gl_max_combined_texture_image_units: s32; // <= GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (only on GL backends)
 }
 #run {
     instance: sg_limits;
@@ -414,7 +418,9 @@ sg_limits :: struct {
     assert(size_of(type_of(sg_limits.max_vertex_attrs)) == 4, "sg_limits.max_vertex_attrs has unexpected size % instead of 4", size_of(type_of(sg_limits.max_vertex_attrs)));
     assert(((cast(*void)(*instance.gl_max_vertex_uniform_vectors)) - cast(*void)(*instance)) == 24, "sg_limits.gl_max_vertex_uniform_vectors has unexpected offset % instead of 24", ((cast(*void)(*instance.gl_max_vertex_uniform_vectors)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_limits.gl_max_vertex_uniform_vectors)) == 4, "sg_limits.gl_max_vertex_uniform_vectors has unexpected size % instead of 4", size_of(type_of(sg_limits.gl_max_vertex_uniform_vectors)));
-    assert(size_of(sg_limits) == 28, "sg_limits has size % instead of 28", size_of(sg_limits));
+    assert(((cast(*void)(*instance.gl_max_combined_texture_image_units)) - cast(*void)(*instance)) == 28, "sg_limits.gl_max_combined_texture_image_units has unexpected offset % instead of 28", ((cast(*void)(*instance.gl_max_combined_texture_image_units)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_limits.gl_max_combined_texture_image_units)) == 4, "sg_limits.gl_max_combined_texture_image_units has unexpected size % instead of 4", size_of(type_of(sg_limits.gl_max_combined_texture_image_units)));
+    assert(size_of(sg_limits) == 32, "sg_limits has size % instead of 32", size_of(sg_limits));
 }
 
 /*
@@ -759,7 +765,9 @@ sg_vertex_format :: enum u32 {
     SG_VERTEXFORMAT_SHORT4N   :: 13;
     SG_VERTEXFORMAT_USHORT4N  :: 14;
     SG_VERTEXFORMAT_UINT10_N2 :: 15;
-    SG_VERTEXFORMAT_NUM       :: 16;
+    SG_VERTEXFORMAT_HALF2     :: 16;
+    SG_VERTEXFORMAT_HALF4     :: 17;
+    SG_VERTEXFORMAT_NUM       :: 18;
     SG_VERTEXFORMAT_FORCE_U32 :: 2147483647;
 
     _SG_VERTEXFORMAT_NUM       :: SG_VERTEXFORMAT_NUM;
@@ -803,12 +811,63 @@ sg_uniform_type :: enum u32 {
     SG_UNIFORMTYPE_FLOAT2    :: 2;
     SG_UNIFORMTYPE_FLOAT3    :: 3;
     SG_UNIFORMTYPE_FLOAT4    :: 4;
-    SG_UNIFORMTYPE_MAT4      :: 5;
-    SG_UNIFORMTYPE_NUM       :: 6;
+    SG_UNIFORMTYPE_INT       :: 5;
+    SG_UNIFORMTYPE_INT2      :: 6;
+    SG_UNIFORMTYPE_INT3      :: 7;
+    SG_UNIFORMTYPE_INT4      :: 8;
+    SG_UNIFORMTYPE_MAT4      :: 9;
+    SG_UNIFORMTYPE_NUM       :: 10;
     SG_UNIFORMTYPE_FORCE_U32 :: 2147483647;
 
     _SG_UNIFORMTYPE_NUM       :: SG_UNIFORMTYPE_NUM;
     _SG_UNIFORMTYPE_FORCE_U32 :: SG_UNIFORMTYPE_FORCE_U32;
+}
+
+/*
+sg_uniform_layout
+
+A hint for the interior memory layout of uniform blocks. This is
+only really relevant for the GL backend where the internal layout
+of uniform blocks must be known to sokol-gfx. For all other backends the
+internal memory layout of uniform blocks doesn't matter, sokol-gfx
+will just pass uniform data as a single memory blob to the
+3D backend.
+
+SG_UNIFORMLAYOUT_NATIVE (default)
+Native layout means that a 'backend-native' memory layout
+is used. For the GL backend this means that uniforms
+are packed tightly in memory (e.g. there are no padding
+bytes).
+
+SG_UNIFORMLAYOUT_STD140
+The memory layout is a subset of std140. Arrays are only
+allowed for the FLOAT4, INT4 and MAT4. Alignment is as
+is as follows:
+
+FLOAT, INT:         4 byte alignment
+FLOAT2, INT2:       8 byte alignment
+FLOAT3, INT3:       16 byte alignment(!)
+FLOAT4, INT4:       16 byte alignment
+MAT4:               16 byte alignment
+FLOAT4[], INT4[]:   16 byte alignment
+
+The overall size of the uniform block must be a multiple
+of 16.
+
+For more information search for 'UNIFORM DATA LAYOUT' in the documentation block
+at the start of the header.
+*/
+sg_uniform_layout :: enum u32 {
+    SG_UNIFORMLAYOUT_DEFAULT   :: 0;
+    SG_UNIFORMLAYOUT_NATIVE    :: 1;
+    SG_UNIFORMLAYOUT_STD140    :: 2;
+    SG_UNIFORMLAYOUT_NUM       :: 3;
+    SG_UNIFORMLAYOUT_FORCE_U32 :: 2147483647;
+
+    _SG_UNIFORMLAYOUT_DEFAULT   :: SG_UNIFORMLAYOUT_DEFAULT;
+
+    _SG_UNIFORMLAYOUT_NUM       :: SG_UNIFORMLAYOUT_NUM;
+    _SG_UNIFORMLAYOUT_FORCE_U32 :: SG_UNIFORMLAYOUT_FORCE_U32;
 }
 
 /*
@@ -1509,6 +1568,7 @@ programs, used as input to the sg_make_shader() function:
 defaults are "vs_4_0" and "ps_4_0")
 - reflection info for each uniform block used by the shader stage:
 - the size of the uniform block in bytes
+- a memory layout hint (native vs std140, only required for GL backends)
 - reflection info for each uniform block member (only required for GL backends):
 - member name
 - member type (SG_UNIFORMTYPE_xxx)
@@ -1561,15 +1621,18 @@ sg_shader_uniform_desc :: struct {
 
 sg_shader_uniform_block_desc :: struct {
     size:     size_t;
+    layout:   sg_uniform_layout;
     uniforms: [16] sg_shader_uniform_desc;
 }
 #run {
     instance: sg_shader_uniform_block_desc;
     assert(((cast(*void)(*instance.size)) - cast(*void)(*instance)) == 0, "sg_shader_uniform_block_desc.size has unexpected offset % instead of 0", ((cast(*void)(*instance.size)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_shader_uniform_block_desc.size)) == 8, "sg_shader_uniform_block_desc.size has unexpected size % instead of 8", size_of(type_of(sg_shader_uniform_block_desc.size)));
-    assert(((cast(*void)(*instance.uniforms)) - cast(*void)(*instance)) == 8, "sg_shader_uniform_block_desc.uniforms has unexpected offset % instead of 8", ((cast(*void)(*instance.uniforms)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.layout)) - cast(*void)(*instance)) == 8, "sg_shader_uniform_block_desc.layout has unexpected offset % instead of 8", ((cast(*void)(*instance.layout)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_shader_uniform_block_desc.layout)) == 4, "sg_shader_uniform_block_desc.layout has unexpected size % instead of 4", size_of(type_of(sg_shader_uniform_block_desc.layout)));
+    assert(((cast(*void)(*instance.uniforms)) - cast(*void)(*instance)) == 16, "sg_shader_uniform_block_desc.uniforms has unexpected offset % instead of 16", ((cast(*void)(*instance.uniforms)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_shader_uniform_block_desc.uniforms)) == 256, "sg_shader_uniform_block_desc.uniforms has unexpected size % instead of 256", size_of(type_of(sg_shader_uniform_block_desc.uniforms)));
-    assert(size_of(sg_shader_uniform_block_desc) == 264, "sg_shader_uniform_block_desc has size % instead of 264", size_of(sg_shader_uniform_block_desc));
+    assert(size_of(sg_shader_uniform_block_desc) == 272, "sg_shader_uniform_block_desc has size % instead of 272", size_of(sg_shader_uniform_block_desc));
 }
 
 sg_shader_image_desc :: struct {
@@ -1607,10 +1670,10 @@ sg_shader_stage_desc :: struct {
     assert(((cast(*void)(*instance.d3d11_target)) - cast(*void)(*instance)) == 32, "sg_shader_stage_desc.d3d11_target has unexpected offset % instead of 32", ((cast(*void)(*instance.d3d11_target)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_shader_stage_desc.d3d11_target)) == 8, "sg_shader_stage_desc.d3d11_target has unexpected size % instead of 8", size_of(type_of(sg_shader_stage_desc.d3d11_target)));
     assert(((cast(*void)(*instance.uniform_blocks)) - cast(*void)(*instance)) == 40, "sg_shader_stage_desc.uniform_blocks has unexpected offset % instead of 40", ((cast(*void)(*instance.uniform_blocks)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sg_shader_stage_desc.uniform_blocks)) == 1056, "sg_shader_stage_desc.uniform_blocks has unexpected size % instead of 1056", size_of(type_of(sg_shader_stage_desc.uniform_blocks)));
-    assert(((cast(*void)(*instance.images)) - cast(*void)(*instance)) == 1096, "sg_shader_stage_desc.images has unexpected offset % instead of 1096", ((cast(*void)(*instance.images)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_shader_stage_desc.uniform_blocks)) == 1088, "sg_shader_stage_desc.uniform_blocks has unexpected size % instead of 1088", size_of(type_of(sg_shader_stage_desc.uniform_blocks)));
+    assert(((cast(*void)(*instance.images)) - cast(*void)(*instance)) == 1128, "sg_shader_stage_desc.images has unexpected offset % instead of 1128", ((cast(*void)(*instance.images)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_shader_stage_desc.images)) == 192, "sg_shader_stage_desc.images has unexpected size % instead of 192", size_of(type_of(sg_shader_stage_desc.images)));
-    assert(size_of(sg_shader_stage_desc) == 1288, "sg_shader_stage_desc has size % instead of 1288", size_of(sg_shader_stage_desc));
+    assert(size_of(sg_shader_stage_desc) == 1320, "sg_shader_stage_desc has size % instead of 1320", size_of(sg_shader_stage_desc));
 }
 
 sg_shader_desc :: struct {
@@ -1628,14 +1691,14 @@ sg_shader_desc :: struct {
     assert(((cast(*void)(*instance.attrs)) - cast(*void)(*instance)) == 8, "sg_shader_desc.attrs has unexpected offset % instead of 8", ((cast(*void)(*instance.attrs)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_shader_desc.attrs)) == 384, "sg_shader_desc.attrs has unexpected size % instead of 384", size_of(type_of(sg_shader_desc.attrs)));
     assert(((cast(*void)(*instance.vs)) - cast(*void)(*instance)) == 392, "sg_shader_desc.vs has unexpected offset % instead of 392", ((cast(*void)(*instance.vs)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sg_shader_desc.vs)) == 1288, "sg_shader_desc.vs has unexpected size % instead of 1288", size_of(type_of(sg_shader_desc.vs)));
-    assert(((cast(*void)(*instance.fs)) - cast(*void)(*instance)) == 1680, "sg_shader_desc.fs has unexpected offset % instead of 1680", ((cast(*void)(*instance.fs)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sg_shader_desc.fs)) == 1288, "sg_shader_desc.fs has unexpected size % instead of 1288", size_of(type_of(sg_shader_desc.fs)));
-    assert(((cast(*void)(*instance.label)) - cast(*void)(*instance)) == 2968, "sg_shader_desc.label has unexpected offset % instead of 2968", ((cast(*void)(*instance.label)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_shader_desc.vs)) == 1320, "sg_shader_desc.vs has unexpected size % instead of 1320", size_of(type_of(sg_shader_desc.vs)));
+    assert(((cast(*void)(*instance.fs)) - cast(*void)(*instance)) == 1712, "sg_shader_desc.fs has unexpected offset % instead of 1712", ((cast(*void)(*instance.fs)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_shader_desc.fs)) == 1320, "sg_shader_desc.fs has unexpected size % instead of 1320", size_of(type_of(sg_shader_desc.fs)));
+    assert(((cast(*void)(*instance.label)) - cast(*void)(*instance)) == 3032, "sg_shader_desc.label has unexpected offset % instead of 3032", ((cast(*void)(*instance.label)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_shader_desc.label)) == 8, "sg_shader_desc.label has unexpected size % instead of 8", size_of(type_of(sg_shader_desc.label)));
-    assert(((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)) == 2976, "sg_shader_desc._end_canary has unexpected offset % instead of 2976", ((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)) == 3040, "sg_shader_desc._end_canary has unexpected offset % instead of 3040", ((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_shader_desc._end_canary)) == 4, "sg_shader_desc._end_canary has unexpected size % instead of 4", size_of(type_of(sg_shader_desc._end_canary)));
-    assert(size_of(sg_shader_desc) == 2984, "sg_shader_desc has size % instead of 2984", size_of(sg_shader_desc));
+    assert(size_of(sg_shader_desc) == 3048, "sg_shader_desc has size % instead of 3048", size_of(sg_shader_desc));
 }
 
 /*
@@ -1680,9 +1743,9 @@ The default configuration is as follows:
 .enabled:           false
 .front/back:
 .compare:       SG_COMPAREFUNC_ALWAYS
+.fail_op:       SG_STENCILOP_KEEP
 .depth_fail_op: SG_STENCILOP_KEEP
 .pass_op:       SG_STENCILOP_KEEP
-.compare:       SG_COMPAREFUNC_ALWAYS
 .read_mask:         0
 .write_mask:        0
 .ref:               0
@@ -2252,8 +2315,6 @@ sg_image_info :: struct {
     upd_frame_index: u32; /* frame index of last sg_update_image() */
     num_slots:       s32; /* number of renaming-slots for dynamically updated images */
     active_slot:     s32; /* currently active write-slot for dynamically updated images */
-    width:           s32; /* image width */
-    height:          s32; /* image height */
 }
 #run {
     instance: sg_image_info;
@@ -2265,15 +2326,11 @@ sg_image_info :: struct {
     assert(size_of(type_of(sg_image_info.num_slots)) == 4, "sg_image_info.num_slots has unexpected size % instead of 4", size_of(type_of(sg_image_info.num_slots)));
     assert(((cast(*void)(*instance.active_slot)) - cast(*void)(*instance)) == 20, "sg_image_info.active_slot has unexpected offset % instead of 20", ((cast(*void)(*instance.active_slot)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_image_info.active_slot)) == 4, "sg_image_info.active_slot has unexpected size % instead of 4", size_of(type_of(sg_image_info.active_slot)));
-    assert(((cast(*void)(*instance.width)) - cast(*void)(*instance)) == 24, "sg_image_info.width has unexpected offset % instead of 24", ((cast(*void)(*instance.width)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sg_image_info.width)) == 4, "sg_image_info.width has unexpected size % instead of 4", size_of(type_of(sg_image_info.width)));
-    assert(((cast(*void)(*instance.height)) - cast(*void)(*instance)) == 28, "sg_image_info.height has unexpected offset % instead of 28", ((cast(*void)(*instance.height)) - cast(*void)(*instance)));
-    assert(size_of(type_of(sg_image_info.height)) == 4, "sg_image_info.height has unexpected size % instead of 4", size_of(type_of(sg_image_info.height)));
-    assert(size_of(sg_image_info) == 32, "sg_image_info has size % instead of 32", size_of(sg_image_info));
+    assert(size_of(sg_image_info) == 24, "sg_image_info has size % instead of 24", size_of(sg_image_info));
 }
 
 sg_shader_info :: struct {
-    slot: sg_slot_info; /* resoure pool slot info */
+    slot: sg_slot_info; /* resource pool slot info */
 }
 #run {
     instance: sg_shader_info;
@@ -2302,6 +2359,365 @@ sg_pass_info :: struct {
     assert(size_of(sg_pass_info) == 12, "sg_pass_info has size % instead of 12", size_of(sg_pass_info));
 }
 
+sg_log_item :: enum u32 {
+    OK                                                  :: 0;
+    MALLOC_FAILED                                       :: 1;
+    GL_TEXTURE_FORMAT_NOT_SUPPORTED                     :: 2;
+    GL_3D_TEXTURES_NOT_SUPPORTED                        :: 3;
+    GL_ARRAY_TEXTURES_NOT_SUPPORTED                     :: 4;
+    GL_SHADER_COMPILATION_FAILED                        :: 5;
+    GL_SHADER_LINKING_FAILED                            :: 6;
+    GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER             :: 7;
+    GL_FRAMEBUFFER_INCOMPLETE                           :: 8;
+    GL_MSAA_FRAMEBUFFER_INCOMPLETE                      :: 9;
+    D3D11_CREATE_BUFFER_FAILED                          :: 10;
+    D3D11_CREATE_DEPTH_TEXTURE_UNSUPPORTED_PIXEL_FORMAT :: 11;
+    D3D11_CREATE_DEPTH_TEXTURE_FAILED                   :: 12;
+    D3D11_CREATE_2D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT    :: 13;
+    D3D11_CREATE_2D_TEXTURE_FAILED                      :: 14;
+    D3D11_CREATE_2D_SRV_FAILED                          :: 15;
+    D3D11_CREATE_3D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT    :: 16;
+    D3D11_CREATE_3D_TEXTURE_FAILED                      :: 17;
+    D3D11_CREATE_3D_SRV_FAILED                          :: 18;
+    D3D11_CREATE_MSAA_TEXTURE_FAILED                    :: 19;
+    D3D11_CREATE_SAMPLER_STATE_FAILED                   :: 20;
+    D3D11_LOAD_D3DCOMPILER_47_DLL_FAILED                :: 21;
+    D3D11_SHADER_COMPILATION_FAILED                     :: 22;
+    D3D11_SHADER_COMPILATION_OUTPUT                     :: 23;
+    D3D11_CREATE_CONSTANT_BUFFER_FAILED                 :: 24;
+    D3D11_CREATE_INPUT_LAYOUT_FAILED                    :: 25;
+    D3D11_CREATE_RASTERIZER_STATE_FAILED                :: 26;
+    D3D11_CREATE_DEPTH_STENCIL_STATE_FAILED             :: 27;
+    D3D11_CREATE_BLEND_STATE_FAILED                     :: 28;
+    D3D11_CREATE_RTV_FAILED                             :: 29;
+    D3D11_CREATE_DSV_FAILED                             :: 30;
+    D3D11_MAP_FOR_UPDATE_BUFFER_FAILED                  :: 31;
+    D3D11_MAP_FOR_APPEND_BUFFER_FAILED                  :: 32;
+    D3D11_MAP_FOR_UPDATE_IMAGE_FAILED                   :: 33;
+    METAL_TEXTURE_FORMAT_NOT_SUPPORTED                  :: 34;
+    METAL_SHADER_COMPILATION_FAILED                     :: 35;
+    METAL_SHADER_CREATION_FAILED                        :: 36;
+    METAL_SHADER_COMPILATION_OUTPUT                     :: 37;
+    METAL_VERTEX_SHADER_ENTRY_NOT_FOUND                 :: 38;
+    METAL_FRAGMENT_SHADER_ENTRY_NOT_FOUND               :: 39;
+    METAL_CREATE_RPS_FAILED                             :: 40;
+    METAL_CREATE_RPS_OUTPUT                             :: 41;
+    WGPU_MAP_UNIFORM_BUFFER_FAILED                      :: 42;
+    WGPU_STAGING_BUFFER_FULL_COPY_TO_BUFFER             :: 43;
+    WGPU_STAGING_BUFFER_FULL_COPY_TO_TEXTURE            :: 44;
+    WGPU_RESET_STATE_CACHE_FIXME                        :: 45;
+    WGPU_ACTIVATE_CONTEXT_FIXME                         :: 46;
+    UNINIT_BUFFER_ACTIVE_CONTEXT_MISMATCH               :: 47;
+    UNINIT_IMAGE_ACTIVE_CONTEXT_MISMATCH                :: 48;
+    UNINIT_SHADER_ACTIVE_CONTEXT_MISMATCH               :: 49;
+    UNINIT_PIPELINE_ACTIVE_CONTEXT_MISMATCH             :: 50;
+    UNINIT_PASS_ACTIVE_CONTEXT_MISMATCH                 :: 51;
+    IDENTICAL_COMMIT_LISTENER                           :: 52;
+    COMMIT_LISTENER_ARRAY_FULL                          :: 53;
+    TRACE_HOOKS_NOT_ENABLED                             :: 54;
+    DEALLOC_BUFFER_INVALID_STATE                        :: 55;
+    DEALLOC_IMAGE_INVALID_STATE                         :: 56;
+    DEALLOC_SHADER_INVALID_STATE                        :: 57;
+    DEALLOC_PIPELINE_INVALID_STATE                      :: 58;
+    DEALLOC_PASS_INVALID_STATE                          :: 59;
+    INIT_BUFFER_INVALID_STATE                           :: 60;
+    INIT_IMAGE_INVALID_STATE                            :: 61;
+    INIT_SHADER_INVALID_STATE                           :: 62;
+    INIT_PIPELINE_INVALID_STATE                         :: 63;
+    INIT_PASS_INVALID_STATE                             :: 64;
+    UNINIT_BUFFER_INVALID_STATE                         :: 65;
+    UNINIT_IMAGE_INVALID_STATE                          :: 66;
+    UNINIT_SHADER_INVALID_STATE                         :: 67;
+    UNINIT_PIPELINE_INVALID_STATE                       :: 68;
+    UNINIT_PASS_INVALID_STATE                           :: 69;
+    FAIL_BUFFER_INVALID_STATE                           :: 70;
+    FAIL_IMAGE_INVALID_STATE                            :: 71;
+    FAIL_SHADER_INVALID_STATE                           :: 72;
+    FAIL_PIPELINE_INVALID_STATE                         :: 73;
+    FAIL_PASS_INVALID_STATE                             :: 74;
+    BUFFER_POOL_EXHAUSTED                               :: 75;
+    IMAGE_POOL_EXHAUSTED                                :: 76;
+    SHADER_POOL_EXHAUSTED                               :: 77;
+    PIPELINE_POOL_EXHAUSTED                             :: 78;
+    PASS_POOL_EXHAUSTED                                 :: 79;
+    DRAW_WITHOUT_BINDINGS                               :: 80;
+    VALIDATE_BUFFERDESC_CANARY                          :: 81;
+    VALIDATE_BUFFERDESC_SIZE                            :: 82;
+    VALIDATE_BUFFERDESC_DATA                            :: 83;
+    VALIDATE_BUFFERDESC_DATA_SIZE                       :: 84;
+    VALIDATE_BUFFERDESC_NO_DATA                         :: 85;
+    VALIDATE_IMAGEDATA_NODATA                           :: 86;
+    VALIDATE_IMAGEDATA_DATA_SIZE                        :: 87;
+    VALIDATE_IMAGEDESC_CANARY                           :: 88;
+    VALIDATE_IMAGEDESC_WIDTH                            :: 89;
+    VALIDATE_IMAGEDESC_HEIGHT                           :: 90;
+    VALIDATE_IMAGEDESC_RT_PIXELFORMAT                   :: 91;
+    VALIDATE_IMAGEDESC_NONRT_PIXELFORMAT                :: 92;
+    VALIDATE_IMAGEDESC_MSAA_BUT_NO_RT                   :: 93;
+    VALIDATE_IMAGEDESC_NO_MSAA_RT_SUPPORT               :: 94;
+    VALIDATE_IMAGEDESC_RT_IMMUTABLE                     :: 95;
+    VALIDATE_IMAGEDESC_RT_NO_DATA                       :: 96;
+    VALIDATE_IMAGEDESC_INJECTED_NO_DATA                 :: 97;
+    VALIDATE_IMAGEDESC_DYNAMIC_NO_DATA                  :: 98;
+    VALIDATE_IMAGEDESC_COMPRESSED_IMMUTABLE             :: 99;
+    VALIDATE_SHADERDESC_CANARY                          :: 100;
+    VALIDATE_SHADERDESC_SOURCE                          :: 101;
+    VALIDATE_SHADERDESC_BYTECODE                        :: 102;
+    VALIDATE_SHADERDESC_SOURCE_OR_BYTECODE              :: 103;
+    VALIDATE_SHADERDESC_NO_BYTECODE_SIZE                :: 104;
+    VALIDATE_SHADERDESC_NO_CONT_UBS                     :: 105;
+    VALIDATE_SHADERDESC_NO_CONT_UB_MEMBERS              :: 106;
+    VALIDATE_SHADERDESC_NO_UB_MEMBERS                   :: 107;
+    VALIDATE_SHADERDESC_UB_MEMBER_NAME                  :: 108;
+    VALIDATE_SHADERDESC_UB_SIZE_MISMATCH                :: 109;
+    VALIDATE_SHADERDESC_UB_ARRAY_COUNT                  :: 110;
+    VALIDATE_SHADERDESC_UB_STD140_ARRAY_TYPE            :: 111;
+    VALIDATE_SHADERDESC_NO_CONT_IMGS                    :: 112;
+    VALIDATE_SHADERDESC_IMG_NAME                        :: 113;
+    VALIDATE_SHADERDESC_ATTR_NAMES                      :: 114;
+    VALIDATE_SHADERDESC_ATTR_SEMANTICS                  :: 115;
+    VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG            :: 116;
+    VALIDATE_PIPELINEDESC_CANARY                        :: 117;
+    VALIDATE_PIPELINEDESC_SHADER                        :: 118;
+    VALIDATE_PIPELINEDESC_NO_ATTRS                      :: 119;
+    VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4                :: 120;
+    VALIDATE_PIPELINEDESC_ATTR_NAME                     :: 121;
+    VALIDATE_PIPELINEDESC_ATTR_SEMANTICS                :: 122;
+    VALIDATE_PASSDESC_CANARY                            :: 123;
+    VALIDATE_PASSDESC_NO_COLOR_ATTS                     :: 124;
+    VALIDATE_PASSDESC_NO_CONT_COLOR_ATTS                :: 125;
+    VALIDATE_PASSDESC_IMAGE                             :: 126;
+    VALIDATE_PASSDESC_MIPLEVEL                          :: 127;
+    VALIDATE_PASSDESC_FACE                              :: 128;
+    VALIDATE_PASSDESC_LAYER                             :: 129;
+    VALIDATE_PASSDESC_SLICE                             :: 130;
+    VALIDATE_PASSDESC_IMAGE_NO_RT                       :: 131;
+    VALIDATE_PASSDESC_COLOR_INV_PIXELFORMAT             :: 132;
+    VALIDATE_PASSDESC_DEPTH_INV_PIXELFORMAT             :: 133;
+    VALIDATE_PASSDESC_IMAGE_SIZES                       :: 134;
+    VALIDATE_PASSDESC_IMAGE_SAMPLE_COUNTS               :: 135;
+    VALIDATE_BEGINPASS_PASS                             :: 136;
+    VALIDATE_BEGINPASS_IMAGE                            :: 137;
+    VALIDATE_APIP_PIPELINE_VALID_ID                     :: 138;
+    VALIDATE_APIP_PIPELINE_EXISTS                       :: 139;
+    VALIDATE_APIP_PIPELINE_VALID                        :: 140;
+    VALIDATE_APIP_SHADER_EXISTS                         :: 141;
+    VALIDATE_APIP_SHADER_VALID                          :: 142;
+    VALIDATE_APIP_ATT_COUNT                             :: 143;
+    VALIDATE_APIP_COLOR_FORMAT                          :: 144;
+    VALIDATE_APIP_DEPTH_FORMAT                          :: 145;
+    VALIDATE_APIP_SAMPLE_COUNT                          :: 146;
+    VALIDATE_ABND_PIPELINE                              :: 147;
+    VALIDATE_ABND_PIPELINE_EXISTS                       :: 148;
+    VALIDATE_ABND_PIPELINE_VALID                        :: 149;
+    VALIDATE_ABND_VBS                                   :: 150;
+    VALIDATE_ABND_VB_EXISTS                             :: 151;
+    VALIDATE_ABND_VB_TYPE                               :: 152;
+    VALIDATE_ABND_VB_OVERFLOW                           :: 153;
+    VALIDATE_ABND_NO_IB                                 :: 154;
+    VALIDATE_ABND_IB                                    :: 155;
+    VALIDATE_ABND_IB_EXISTS                             :: 156;
+    VALIDATE_ABND_IB_TYPE                               :: 157;
+    VALIDATE_ABND_IB_OVERFLOW                           :: 158;
+    VALIDATE_ABND_VS_IMGS                               :: 159;
+    VALIDATE_ABND_VS_IMG_EXISTS                         :: 160;
+    VALIDATE_ABND_VS_IMG_TYPES                          :: 161;
+    VALIDATE_ABND_FS_IMGS                               :: 162;
+    VALIDATE_ABND_FS_IMG_EXISTS                         :: 163;
+    VALIDATE_ABND_FS_IMG_TYPES                          :: 164;
+    VALIDATE_AUB_NO_PIPELINE                            :: 165;
+    VALIDATE_AUB_NO_UB_AT_SLOT                          :: 166;
+    VALIDATE_AUB_SIZE                                   :: 167;
+    VALIDATE_UPDATEBUF_USAGE                            :: 168;
+    VALIDATE_UPDATEBUF_SIZE                             :: 169;
+    VALIDATE_UPDATEBUF_ONCE                             :: 170;
+    VALIDATE_UPDATEBUF_APPEND                           :: 171;
+    VALIDATE_APPENDBUF_USAGE                            :: 172;
+    VALIDATE_APPENDBUF_SIZE                             :: 173;
+    VALIDATE_APPENDBUF_UPDATE                           :: 174;
+    VALIDATE_UPDIMG_USAGE                               :: 175;
+    VALIDATE_UPDIMG_ONCE                                :: 176;
+    VALIDATION_FAILED                                   :: 177;
+    SG_LOGITEM_OK                                                  :: OK;
+    SG_LOGITEM_MALLOC_FAILED                                       :: MALLOC_FAILED;
+    SG_LOGITEM_GL_TEXTURE_FORMAT_NOT_SUPPORTED                     :: GL_TEXTURE_FORMAT_NOT_SUPPORTED;
+    SG_LOGITEM_GL_3D_TEXTURES_NOT_SUPPORTED                        :: GL_3D_TEXTURES_NOT_SUPPORTED;
+    SG_LOGITEM_GL_ARRAY_TEXTURES_NOT_SUPPORTED                     :: GL_ARRAY_TEXTURES_NOT_SUPPORTED;
+    SG_LOGITEM_GL_SHADER_COMPILATION_FAILED                        :: GL_SHADER_COMPILATION_FAILED;
+    SG_LOGITEM_GL_SHADER_LINKING_FAILED                            :: GL_SHADER_LINKING_FAILED;
+    SG_LOGITEM_GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER             :: GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER;
+    SG_LOGITEM_GL_FRAMEBUFFER_INCOMPLETE                           :: GL_FRAMEBUFFER_INCOMPLETE;
+    SG_LOGITEM_GL_MSAA_FRAMEBUFFER_INCOMPLETE                      :: GL_MSAA_FRAMEBUFFER_INCOMPLETE;
+    SG_LOGITEM_D3D11_CREATE_BUFFER_FAILED                          :: D3D11_CREATE_BUFFER_FAILED;
+    SG_LOGITEM_D3D11_CREATE_DEPTH_TEXTURE_UNSUPPORTED_PIXEL_FORMAT :: D3D11_CREATE_DEPTH_TEXTURE_UNSUPPORTED_PIXEL_FORMAT;
+    SG_LOGITEM_D3D11_CREATE_DEPTH_TEXTURE_FAILED                   :: D3D11_CREATE_DEPTH_TEXTURE_FAILED;
+    SG_LOGITEM_D3D11_CREATE_2D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT    :: D3D11_CREATE_2D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT;
+    SG_LOGITEM_D3D11_CREATE_2D_TEXTURE_FAILED                      :: D3D11_CREATE_2D_TEXTURE_FAILED;
+    SG_LOGITEM_D3D11_CREATE_2D_SRV_FAILED                          :: D3D11_CREATE_2D_SRV_FAILED;
+    SG_LOGITEM_D3D11_CREATE_3D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT    :: D3D11_CREATE_3D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT;
+    SG_LOGITEM_D3D11_CREATE_3D_TEXTURE_FAILED                      :: D3D11_CREATE_3D_TEXTURE_FAILED;
+    SG_LOGITEM_D3D11_CREATE_3D_SRV_FAILED                          :: D3D11_CREATE_3D_SRV_FAILED;
+    SG_LOGITEM_D3D11_CREATE_MSAA_TEXTURE_FAILED                    :: D3D11_CREATE_MSAA_TEXTURE_FAILED;
+    SG_LOGITEM_D3D11_CREATE_SAMPLER_STATE_FAILED                   :: D3D11_CREATE_SAMPLER_STATE_FAILED;
+    SG_LOGITEM_D3D11_LOAD_D3DCOMPILER_47_DLL_FAILED                :: D3D11_LOAD_D3DCOMPILER_47_DLL_FAILED;
+    SG_LOGITEM_D3D11_SHADER_COMPILATION_FAILED                     :: D3D11_SHADER_COMPILATION_FAILED;
+    SG_LOGITEM_D3D11_SHADER_COMPILATION_OUTPUT                     :: D3D11_SHADER_COMPILATION_OUTPUT;
+    SG_LOGITEM_D3D11_CREATE_CONSTANT_BUFFER_FAILED                 :: D3D11_CREATE_CONSTANT_BUFFER_FAILED;
+    SG_LOGITEM_D3D11_CREATE_INPUT_LAYOUT_FAILED                    :: D3D11_CREATE_INPUT_LAYOUT_FAILED;
+    SG_LOGITEM_D3D11_CREATE_RASTERIZER_STATE_FAILED                :: D3D11_CREATE_RASTERIZER_STATE_FAILED;
+    SG_LOGITEM_D3D11_CREATE_DEPTH_STENCIL_STATE_FAILED             :: D3D11_CREATE_DEPTH_STENCIL_STATE_FAILED;
+    SG_LOGITEM_D3D11_CREATE_BLEND_STATE_FAILED                     :: D3D11_CREATE_BLEND_STATE_FAILED;
+    SG_LOGITEM_D3D11_CREATE_RTV_FAILED                             :: D3D11_CREATE_RTV_FAILED;
+    SG_LOGITEM_D3D11_CREATE_DSV_FAILED                             :: D3D11_CREATE_DSV_FAILED;
+    SG_LOGITEM_D3D11_MAP_FOR_UPDATE_BUFFER_FAILED                  :: D3D11_MAP_FOR_UPDATE_BUFFER_FAILED;
+    SG_LOGITEM_D3D11_MAP_FOR_APPEND_BUFFER_FAILED                  :: D3D11_MAP_FOR_APPEND_BUFFER_FAILED;
+    SG_LOGITEM_D3D11_MAP_FOR_UPDATE_IMAGE_FAILED                   :: D3D11_MAP_FOR_UPDATE_IMAGE_FAILED;
+    SG_LOGITEM_METAL_TEXTURE_FORMAT_NOT_SUPPORTED                  :: METAL_TEXTURE_FORMAT_NOT_SUPPORTED;
+    SG_LOGITEM_METAL_SHADER_COMPILATION_FAILED                     :: METAL_SHADER_COMPILATION_FAILED;
+    SG_LOGITEM_METAL_SHADER_CREATION_FAILED                        :: METAL_SHADER_CREATION_FAILED;
+    SG_LOGITEM_METAL_SHADER_COMPILATION_OUTPUT                     :: METAL_SHADER_COMPILATION_OUTPUT;
+    SG_LOGITEM_METAL_VERTEX_SHADER_ENTRY_NOT_FOUND                 :: METAL_VERTEX_SHADER_ENTRY_NOT_FOUND;
+    SG_LOGITEM_METAL_FRAGMENT_SHADER_ENTRY_NOT_FOUND               :: METAL_FRAGMENT_SHADER_ENTRY_NOT_FOUND;
+    SG_LOGITEM_METAL_CREATE_RPS_FAILED                             :: METAL_CREATE_RPS_FAILED;
+    SG_LOGITEM_METAL_CREATE_RPS_OUTPUT                             :: METAL_CREATE_RPS_OUTPUT;
+    SG_LOGITEM_WGPU_MAP_UNIFORM_BUFFER_FAILED                      :: WGPU_MAP_UNIFORM_BUFFER_FAILED;
+    SG_LOGITEM_WGPU_STAGING_BUFFER_FULL_COPY_TO_BUFFER             :: WGPU_STAGING_BUFFER_FULL_COPY_TO_BUFFER;
+    SG_LOGITEM_WGPU_STAGING_BUFFER_FULL_COPY_TO_TEXTURE            :: WGPU_STAGING_BUFFER_FULL_COPY_TO_TEXTURE;
+    SG_LOGITEM_WGPU_RESET_STATE_CACHE_FIXME                        :: WGPU_RESET_STATE_CACHE_FIXME;
+    SG_LOGITEM_WGPU_ACTIVATE_CONTEXT_FIXME                         :: WGPU_ACTIVATE_CONTEXT_FIXME;
+    SG_LOGITEM_UNINIT_BUFFER_ACTIVE_CONTEXT_MISMATCH               :: UNINIT_BUFFER_ACTIVE_CONTEXT_MISMATCH;
+    SG_LOGITEM_UNINIT_IMAGE_ACTIVE_CONTEXT_MISMATCH                :: UNINIT_IMAGE_ACTIVE_CONTEXT_MISMATCH;
+    SG_LOGITEM_UNINIT_SHADER_ACTIVE_CONTEXT_MISMATCH               :: UNINIT_SHADER_ACTIVE_CONTEXT_MISMATCH;
+    SG_LOGITEM_UNINIT_PIPELINE_ACTIVE_CONTEXT_MISMATCH             :: UNINIT_PIPELINE_ACTIVE_CONTEXT_MISMATCH;
+    SG_LOGITEM_UNINIT_PASS_ACTIVE_CONTEXT_MISMATCH                 :: UNINIT_PASS_ACTIVE_CONTEXT_MISMATCH;
+    SG_LOGITEM_IDENTICAL_COMMIT_LISTENER                           :: IDENTICAL_COMMIT_LISTENER;
+    SG_LOGITEM_COMMIT_LISTENER_ARRAY_FULL                          :: COMMIT_LISTENER_ARRAY_FULL;
+    SG_LOGITEM_TRACE_HOOKS_NOT_ENABLED                             :: TRACE_HOOKS_NOT_ENABLED;
+    SG_LOGITEM_DEALLOC_BUFFER_INVALID_STATE                        :: DEALLOC_BUFFER_INVALID_STATE;
+    SG_LOGITEM_DEALLOC_IMAGE_INVALID_STATE                         :: DEALLOC_IMAGE_INVALID_STATE;
+    SG_LOGITEM_DEALLOC_SHADER_INVALID_STATE                        :: DEALLOC_SHADER_INVALID_STATE;
+    SG_LOGITEM_DEALLOC_PIPELINE_INVALID_STATE                      :: DEALLOC_PIPELINE_INVALID_STATE;
+    SG_LOGITEM_DEALLOC_PASS_INVALID_STATE                          :: DEALLOC_PASS_INVALID_STATE;
+    SG_LOGITEM_INIT_BUFFER_INVALID_STATE                           :: INIT_BUFFER_INVALID_STATE;
+    SG_LOGITEM_INIT_IMAGE_INVALID_STATE                            :: INIT_IMAGE_INVALID_STATE;
+    SG_LOGITEM_INIT_SHADER_INVALID_STATE                           :: INIT_SHADER_INVALID_STATE;
+    SG_LOGITEM_INIT_PIPELINE_INVALID_STATE                         :: INIT_PIPELINE_INVALID_STATE;
+    SG_LOGITEM_INIT_PASS_INVALID_STATE                             :: INIT_PASS_INVALID_STATE;
+    SG_LOGITEM_UNINIT_BUFFER_INVALID_STATE                         :: UNINIT_BUFFER_INVALID_STATE;
+    SG_LOGITEM_UNINIT_IMAGE_INVALID_STATE                          :: UNINIT_IMAGE_INVALID_STATE;
+    SG_LOGITEM_UNINIT_SHADER_INVALID_STATE                         :: UNINIT_SHADER_INVALID_STATE;
+    SG_LOGITEM_UNINIT_PIPELINE_INVALID_STATE                       :: UNINIT_PIPELINE_INVALID_STATE;
+    SG_LOGITEM_UNINIT_PASS_INVALID_STATE                           :: UNINIT_PASS_INVALID_STATE;
+    SG_LOGITEM_FAIL_BUFFER_INVALID_STATE                           :: FAIL_BUFFER_INVALID_STATE;
+    SG_LOGITEM_FAIL_IMAGE_INVALID_STATE                            :: FAIL_IMAGE_INVALID_STATE;
+    SG_LOGITEM_FAIL_SHADER_INVALID_STATE                           :: FAIL_SHADER_INVALID_STATE;
+    SG_LOGITEM_FAIL_PIPELINE_INVALID_STATE                         :: FAIL_PIPELINE_INVALID_STATE;
+    SG_LOGITEM_FAIL_PASS_INVALID_STATE                             :: FAIL_PASS_INVALID_STATE;
+    SG_LOGITEM_BUFFER_POOL_EXHAUSTED                               :: BUFFER_POOL_EXHAUSTED;
+    SG_LOGITEM_IMAGE_POOL_EXHAUSTED                                :: IMAGE_POOL_EXHAUSTED;
+    SG_LOGITEM_SHADER_POOL_EXHAUSTED                               :: SHADER_POOL_EXHAUSTED;
+    SG_LOGITEM_PIPELINE_POOL_EXHAUSTED                             :: PIPELINE_POOL_EXHAUSTED;
+    SG_LOGITEM_PASS_POOL_EXHAUSTED                                 :: PASS_POOL_EXHAUSTED;
+    SG_LOGITEM_DRAW_WITHOUT_BINDINGS                               :: DRAW_WITHOUT_BINDINGS;
+    SG_LOGITEM_VALIDATE_BUFFERDESC_CANARY                          :: VALIDATE_BUFFERDESC_CANARY;
+    SG_LOGITEM_VALIDATE_BUFFERDESC_SIZE                            :: VALIDATE_BUFFERDESC_SIZE;
+    SG_LOGITEM_VALIDATE_BUFFERDESC_DATA                            :: VALIDATE_BUFFERDESC_DATA;
+    SG_LOGITEM_VALIDATE_BUFFERDESC_DATA_SIZE                       :: VALIDATE_BUFFERDESC_DATA_SIZE;
+    SG_LOGITEM_VALIDATE_BUFFERDESC_NO_DATA                         :: VALIDATE_BUFFERDESC_NO_DATA;
+    SG_LOGITEM_VALIDATE_IMAGEDATA_NODATA                           :: VALIDATE_IMAGEDATA_NODATA;
+    SG_LOGITEM_VALIDATE_IMAGEDATA_DATA_SIZE                        :: VALIDATE_IMAGEDATA_DATA_SIZE;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_CANARY                           :: VALIDATE_IMAGEDESC_CANARY;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_WIDTH                            :: VALIDATE_IMAGEDESC_WIDTH;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_HEIGHT                           :: VALIDATE_IMAGEDESC_HEIGHT;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_RT_PIXELFORMAT                   :: VALIDATE_IMAGEDESC_RT_PIXELFORMAT;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_NONRT_PIXELFORMAT                :: VALIDATE_IMAGEDESC_NONRT_PIXELFORMAT;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_MSAA_BUT_NO_RT                   :: VALIDATE_IMAGEDESC_MSAA_BUT_NO_RT;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_NO_MSAA_RT_SUPPORT               :: VALIDATE_IMAGEDESC_NO_MSAA_RT_SUPPORT;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_RT_IMMUTABLE                     :: VALIDATE_IMAGEDESC_RT_IMMUTABLE;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_RT_NO_DATA                       :: VALIDATE_IMAGEDESC_RT_NO_DATA;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_INJECTED_NO_DATA                 :: VALIDATE_IMAGEDESC_INJECTED_NO_DATA;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_DYNAMIC_NO_DATA                  :: VALIDATE_IMAGEDESC_DYNAMIC_NO_DATA;
+    SG_LOGITEM_VALIDATE_IMAGEDESC_COMPRESSED_IMMUTABLE             :: VALIDATE_IMAGEDESC_COMPRESSED_IMMUTABLE;
+    SG_LOGITEM_VALIDATE_SHADERDESC_CANARY                          :: VALIDATE_SHADERDESC_CANARY;
+    SG_LOGITEM_VALIDATE_SHADERDESC_SOURCE                          :: VALIDATE_SHADERDESC_SOURCE;
+    SG_LOGITEM_VALIDATE_SHADERDESC_BYTECODE                        :: VALIDATE_SHADERDESC_BYTECODE;
+    SG_LOGITEM_VALIDATE_SHADERDESC_SOURCE_OR_BYTECODE              :: VALIDATE_SHADERDESC_SOURCE_OR_BYTECODE;
+    SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE                :: VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
+    SG_LOGITEM_VALIDATE_SHADERDESC_NO_CONT_UBS                     :: VALIDATE_SHADERDESC_NO_CONT_UBS;
+    SG_LOGITEM_VALIDATE_SHADERDESC_NO_CONT_UB_MEMBERS              :: VALIDATE_SHADERDESC_NO_CONT_UB_MEMBERS;
+    SG_LOGITEM_VALIDATE_SHADERDESC_NO_UB_MEMBERS                   :: VALIDATE_SHADERDESC_NO_UB_MEMBERS;
+    SG_LOGITEM_VALIDATE_SHADERDESC_UB_MEMBER_NAME                  :: VALIDATE_SHADERDESC_UB_MEMBER_NAME;
+    SG_LOGITEM_VALIDATE_SHADERDESC_UB_SIZE_MISMATCH                :: VALIDATE_SHADERDESC_UB_SIZE_MISMATCH;
+    SG_LOGITEM_VALIDATE_SHADERDESC_UB_ARRAY_COUNT                  :: VALIDATE_SHADERDESC_UB_ARRAY_COUNT;
+    SG_LOGITEM_VALIDATE_SHADERDESC_UB_STD140_ARRAY_TYPE            :: VALIDATE_SHADERDESC_UB_STD140_ARRAY_TYPE;
+    SG_LOGITEM_VALIDATE_SHADERDESC_NO_CONT_IMGS                    :: VALIDATE_SHADERDESC_NO_CONT_IMGS;
+    SG_LOGITEM_VALIDATE_SHADERDESC_IMG_NAME                        :: VALIDATE_SHADERDESC_IMG_NAME;
+    SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_NAMES                      :: VALIDATE_SHADERDESC_ATTR_NAMES;
+    SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_SEMANTICS                  :: VALIDATE_SHADERDESC_ATTR_SEMANTICS;
+    SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG            :: VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
+    SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY                        :: VALIDATE_PIPELINEDESC_CANARY;
+    SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER                        :: VALIDATE_PIPELINEDESC_SHADER;
+    SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_ATTRS                      :: VALIDATE_PIPELINEDESC_NO_ATTRS;
+    SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4                :: VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4;
+    SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_NAME                     :: VALIDATE_PIPELINEDESC_ATTR_NAME;
+    SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS                :: VALIDATE_PIPELINEDESC_ATTR_SEMANTICS;
+    SG_LOGITEM_VALIDATE_PASSDESC_CANARY                            :: VALIDATE_PASSDESC_CANARY;
+    SG_LOGITEM_VALIDATE_PASSDESC_NO_COLOR_ATTS                     :: VALIDATE_PASSDESC_NO_COLOR_ATTS;
+    SG_LOGITEM_VALIDATE_PASSDESC_NO_CONT_COLOR_ATTS                :: VALIDATE_PASSDESC_NO_CONT_COLOR_ATTS;
+    SG_LOGITEM_VALIDATE_PASSDESC_IMAGE                             :: VALIDATE_PASSDESC_IMAGE;
+    SG_LOGITEM_VALIDATE_PASSDESC_MIPLEVEL                          :: VALIDATE_PASSDESC_MIPLEVEL;
+    SG_LOGITEM_VALIDATE_PASSDESC_FACE                              :: VALIDATE_PASSDESC_FACE;
+    SG_LOGITEM_VALIDATE_PASSDESC_LAYER                             :: VALIDATE_PASSDESC_LAYER;
+    SG_LOGITEM_VALIDATE_PASSDESC_SLICE                             :: VALIDATE_PASSDESC_SLICE;
+    SG_LOGITEM_VALIDATE_PASSDESC_IMAGE_NO_RT                       :: VALIDATE_PASSDESC_IMAGE_NO_RT;
+    SG_LOGITEM_VALIDATE_PASSDESC_COLOR_INV_PIXELFORMAT             :: VALIDATE_PASSDESC_COLOR_INV_PIXELFORMAT;
+    SG_LOGITEM_VALIDATE_PASSDESC_DEPTH_INV_PIXELFORMAT             :: VALIDATE_PASSDESC_DEPTH_INV_PIXELFORMAT;
+    SG_LOGITEM_VALIDATE_PASSDESC_IMAGE_SIZES                       :: VALIDATE_PASSDESC_IMAGE_SIZES;
+    SG_LOGITEM_VALIDATE_PASSDESC_IMAGE_SAMPLE_COUNTS               :: VALIDATE_PASSDESC_IMAGE_SAMPLE_COUNTS;
+    SG_LOGITEM_VALIDATE_BEGINPASS_PASS                             :: VALIDATE_BEGINPASS_PASS;
+    SG_LOGITEM_VALIDATE_BEGINPASS_IMAGE                            :: VALIDATE_BEGINPASS_IMAGE;
+    SG_LOGITEM_VALIDATE_APIP_PIPELINE_VALID_ID                     :: VALIDATE_APIP_PIPELINE_VALID_ID;
+    SG_LOGITEM_VALIDATE_APIP_PIPELINE_EXISTS                       :: VALIDATE_APIP_PIPELINE_EXISTS;
+    SG_LOGITEM_VALIDATE_APIP_PIPELINE_VALID                        :: VALIDATE_APIP_PIPELINE_VALID;
+    SG_LOGITEM_VALIDATE_APIP_SHADER_EXISTS                         :: VALIDATE_APIP_SHADER_EXISTS;
+    SG_LOGITEM_VALIDATE_APIP_SHADER_VALID                          :: VALIDATE_APIP_SHADER_VALID;
+    SG_LOGITEM_VALIDATE_APIP_ATT_COUNT                             :: VALIDATE_APIP_ATT_COUNT;
+    SG_LOGITEM_VALIDATE_APIP_COLOR_FORMAT                          :: VALIDATE_APIP_COLOR_FORMAT;
+    SG_LOGITEM_VALIDATE_APIP_DEPTH_FORMAT                          :: VALIDATE_APIP_DEPTH_FORMAT;
+    SG_LOGITEM_VALIDATE_APIP_SAMPLE_COUNT                          :: VALIDATE_APIP_SAMPLE_COUNT;
+    SG_LOGITEM_VALIDATE_ABND_PIPELINE                              :: VALIDATE_ABND_PIPELINE;
+    SG_LOGITEM_VALIDATE_ABND_PIPELINE_EXISTS                       :: VALIDATE_ABND_PIPELINE_EXISTS;
+    SG_LOGITEM_VALIDATE_ABND_PIPELINE_VALID                        :: VALIDATE_ABND_PIPELINE_VALID;
+    SG_LOGITEM_VALIDATE_ABND_VBS                                   :: VALIDATE_ABND_VBS;
+    SG_LOGITEM_VALIDATE_ABND_VB_EXISTS                             :: VALIDATE_ABND_VB_EXISTS;
+    SG_LOGITEM_VALIDATE_ABND_VB_TYPE                               :: VALIDATE_ABND_VB_TYPE;
+    SG_LOGITEM_VALIDATE_ABND_VB_OVERFLOW                           :: VALIDATE_ABND_VB_OVERFLOW;
+    SG_LOGITEM_VALIDATE_ABND_NO_IB                                 :: VALIDATE_ABND_NO_IB;
+    SG_LOGITEM_VALIDATE_ABND_IB                                    :: VALIDATE_ABND_IB;
+    SG_LOGITEM_VALIDATE_ABND_IB_EXISTS                             :: VALIDATE_ABND_IB_EXISTS;
+    SG_LOGITEM_VALIDATE_ABND_IB_TYPE                               :: VALIDATE_ABND_IB_TYPE;
+    SG_LOGITEM_VALIDATE_ABND_IB_OVERFLOW                           :: VALIDATE_ABND_IB_OVERFLOW;
+    SG_LOGITEM_VALIDATE_ABND_VS_IMGS                               :: VALIDATE_ABND_VS_IMGS;
+    SG_LOGITEM_VALIDATE_ABND_VS_IMG_EXISTS                         :: VALIDATE_ABND_VS_IMG_EXISTS;
+    SG_LOGITEM_VALIDATE_ABND_VS_IMG_TYPES                          :: VALIDATE_ABND_VS_IMG_TYPES;
+    SG_LOGITEM_VALIDATE_ABND_FS_IMGS                               :: VALIDATE_ABND_FS_IMGS;
+    SG_LOGITEM_VALIDATE_ABND_FS_IMG_EXISTS                         :: VALIDATE_ABND_FS_IMG_EXISTS;
+    SG_LOGITEM_VALIDATE_ABND_FS_IMG_TYPES                          :: VALIDATE_ABND_FS_IMG_TYPES;
+    SG_LOGITEM_VALIDATE_AUB_NO_PIPELINE                            :: VALIDATE_AUB_NO_PIPELINE;
+    SG_LOGITEM_VALIDATE_AUB_NO_UB_AT_SLOT                          :: VALIDATE_AUB_NO_UB_AT_SLOT;
+    SG_LOGITEM_VALIDATE_AUB_SIZE                                   :: VALIDATE_AUB_SIZE;
+    SG_LOGITEM_VALIDATE_UPDATEBUF_USAGE                            :: VALIDATE_UPDATEBUF_USAGE;
+    SG_LOGITEM_VALIDATE_UPDATEBUF_SIZE                             :: VALIDATE_UPDATEBUF_SIZE;
+    SG_LOGITEM_VALIDATE_UPDATEBUF_ONCE                             :: VALIDATE_UPDATEBUF_ONCE;
+    SG_LOGITEM_VALIDATE_UPDATEBUF_APPEND                           :: VALIDATE_UPDATEBUF_APPEND;
+    SG_LOGITEM_VALIDATE_APPENDBUF_USAGE                            :: VALIDATE_APPENDBUF_USAGE;
+    SG_LOGITEM_VALIDATE_APPENDBUF_SIZE                             :: VALIDATE_APPENDBUF_SIZE;
+    SG_LOGITEM_VALIDATE_APPENDBUF_UPDATE                           :: VALIDATE_APPENDBUF_UPDATE;
+    SG_LOGITEM_VALIDATE_UPDIMG_USAGE                               :: VALIDATE_UPDIMG_USAGE;
+    SG_LOGITEM_VALIDATE_UPDIMG_ONCE                                :: VALIDATE_UPDIMG_ONCE;
+    SG_LOGITEM_VALIDATION_FAILED                                   :: VALIDATION_FAILED;
+}
+
 /*
 sg_desc
 
@@ -2323,9 +2739,15 @@ The default configuration is:
 .pipeline_pool_size     64
 .pass_pool_size         16
 .context_pool_size      16
-.sampler_cache_size     64
 .uniform_buffer_size    4 MB (4*1024*1024)
 .staging_buffer_size    8 MB (8*1024*1024)
+.sampler_cache_size     64
+.max_commit_listeners   1024
+.disable_validation     false
+
+.allocator.alloc        0 (in this case, malloc() will be called)
+.allocator.free         0 (in this case, free() will be called)
+.allocator.user_data    0
 
 .context.color_format: default value depends on selected backend:
 all GL backends:    SG_PIXELFORMAT_RGBA8
@@ -2382,7 +2804,7 @@ a C callback function to obtain a pointer to the current
 ID3D11DepthStencilView object of the default framebuffer,
 this function will be called in sg_begin_pass() when rendering
 to the default framebuffer
-.context.metal.user_data
+.context.d3d11.user_data
 optional user data pointer passed to the userdata versions of
 callback functions
 
@@ -2403,7 +2825,7 @@ MSAA-resolve-target surface, must return 0 if not MSAA rendering
 .context.wgpu.depth_stencil_view_userdata_cb
 callback to get current default-pass depth-stencil-surface WGPUTextureView
 the pixel format of the default WGPUTextureView must be WGPUTextureFormat_Depth24Plus8
-.context.metal.user_data
+.context.wgpu.user_data
 optional user data pointer passed to the userdata versions of
 callback functions
 
@@ -2535,19 +2957,93 @@ sg_context_desc :: struct {
     assert(size_of(sg_context_desc) == 184, "sg_context_desc has size % instead of 184", size_of(sg_context_desc));
 }
 
+/*
+sg_commit_listener
+
+Used with function sg_add_commit_listener() to add a callback
+which will be called in sg_commit(). This is useful for libraries
+building on top of sokol-gfx to be notified about when a frame
+ends (instead of having to guess, or add a manual 'new-frame'
+function.
+*/
+sg_commit_listener :: struct {
+    func:      #type (user_data: *void) -> void #c_call;
+    user_data: *void;
+}
+#run {
+    instance: sg_commit_listener;
+    assert(((cast(*void)(*instance.func)) - cast(*void)(*instance)) == 0, "sg_commit_listener.func has unexpected offset % instead of 0", ((cast(*void)(*instance.func)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_commit_listener.func)) == 8, "sg_commit_listener.func has unexpected size % instead of 8", size_of(type_of(sg_commit_listener.func)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 8, "sg_commit_listener.user_data has unexpected offset % instead of 8", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_commit_listener.user_data)) == 8, "sg_commit_listener.user_data has unexpected size % instead of 8", size_of(type_of(sg_commit_listener.user_data)));
+    assert(size_of(sg_commit_listener) == 16, "sg_commit_listener has size % instead of 16", size_of(sg_commit_listener));
+}
+
+/*
+sg_allocator
+
+Used in sg_desc to provide custom memory-alloc and -free functions
+to sokol_gfx.h. If memory management should be overridden, both the
+alloc and free function must be provided (e.g. it's not valid to
+override one function but not the other).
+*/
+sg_allocator :: struct {
+    alloc:     #type (size: size_t, user_data: *void) -> *void #c_call;
+    free:      #type (ptr: *void, user_data: *void) -> void #c_call;
+    user_data: *void;
+}
+#run {
+    instance: sg_allocator;
+    assert(((cast(*void)(*instance.alloc)) - cast(*void)(*instance)) == 0, "sg_allocator.alloc has unexpected offset % instead of 0", ((cast(*void)(*instance.alloc)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_allocator.alloc)) == 8, "sg_allocator.alloc has unexpected size % instead of 8", size_of(type_of(sg_allocator.alloc)));
+    assert(((cast(*void)(*instance.free)) - cast(*void)(*instance)) == 8, "sg_allocator.free has unexpected offset % instead of 8", ((cast(*void)(*instance.free)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_allocator.free)) == 8, "sg_allocator.free has unexpected size % instead of 8", size_of(type_of(sg_allocator.free)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 16, "sg_allocator.user_data has unexpected offset % instead of 16", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_allocator.user_data)) == 8, "sg_allocator.user_data has unexpected size % instead of 8", size_of(type_of(sg_allocator.user_data)));
+    assert(size_of(sg_allocator) == 24, "sg_allocator has size % instead of 24", size_of(sg_allocator));
+}
+
+/*
+sg_logger
+
+Used in sg_desc to provide a logging function. Please be aware
+that without logging function, sokol-gfx will be completely
+silent, e.g. it will not report errors, warnings and
+validation layer messages. For maximum error verbosity,
+compile in debug mode (e.g. NDEBUG *not* defined) and install
+a logger (for instance the standard logging function from sokol_log.h).
+*/
+sg_logger :: struct {
+    func:      #type (tag: *u8, log_level: u32, log_item_id: u32, message_or_null: *u8, line_nr: u32, filename_or_null: *u8, user_data: *void) -> void #c_call;
+
+    user_data: *void;
+}
+#run {
+    instance: sg_logger;
+    assert(((cast(*void)(*instance.func)) - cast(*void)(*instance)) == 0, "sg_logger.func has unexpected offset % instead of 0", ((cast(*void)(*instance.func)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_logger.func)) == 8, "sg_logger.func has unexpected size % instead of 8", size_of(type_of(sg_logger.func)));
+    assert(((cast(*void)(*instance.user_data)) - cast(*void)(*instance)) == 8, "sg_logger.user_data has unexpected offset % instead of 8", ((cast(*void)(*instance.user_data)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_logger.user_data)) == 8, "sg_logger.user_data has unexpected size % instead of 8", size_of(type_of(sg_logger.user_data)));
+    assert(size_of(sg_logger) == 16, "sg_logger has size % instead of 16", size_of(sg_logger));
+}
+
 sg_desc :: struct {
-    _start_canary:       u32;
-    buffer_pool_size:    s32;
-    image_pool_size:     s32;
-    shader_pool_size:    s32;
-    pipeline_pool_size:  s32;
-    pass_pool_size:      s32;
-    context_pool_size:   s32;
-    uniform_buffer_size: s32;
-    staging_buffer_size: s32;
-    sampler_cache_size:  s32;
-    _context:            sg_context_desc;
-    _end_canary:         u32;
+    _start_canary:        u32;
+    buffer_pool_size:     s32;
+    image_pool_size:      s32;
+    shader_pool_size:     s32;
+    pipeline_pool_size:   s32;
+    pass_pool_size:       s32;
+    context_pool_size:    s32;
+    uniform_buffer_size:  s32;
+    staging_buffer_size:  s32;
+    sampler_cache_size:   s32;
+    max_commit_listeners: s32;
+    disable_validation:   bool; // disable validation layer even in debug mode, useful for tests
+    allocator:            sg_allocator;
+    logger:               sg_logger; // optional log function override
+    _context:             sg_context_desc;
+    _end_canary:          u32;
 }
 #run {
     instance: sg_desc;
@@ -2571,11 +3067,19 @@ sg_desc :: struct {
     assert(size_of(type_of(sg_desc.staging_buffer_size)) == 4, "sg_desc.staging_buffer_size has unexpected size % instead of 4", size_of(type_of(sg_desc.staging_buffer_size)));
     assert(((cast(*void)(*instance.sampler_cache_size)) - cast(*void)(*instance)) == 36, "sg_desc.sampler_cache_size has unexpected offset % instead of 36", ((cast(*void)(*instance.sampler_cache_size)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_desc.sampler_cache_size)) == 4, "sg_desc.sampler_cache_size has unexpected size % instead of 4", size_of(type_of(sg_desc.sampler_cache_size)));
-    assert(((cast(*void)(*instance._context)) - cast(*void)(*instance)) == 40, "sg_desc._context has unexpected offset % instead of 40", ((cast(*void)(*instance._context)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance.max_commit_listeners)) - cast(*void)(*instance)) == 40, "sg_desc.max_commit_listeners has unexpected offset % instead of 40", ((cast(*void)(*instance.max_commit_listeners)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_desc.max_commit_listeners)) == 4, "sg_desc.max_commit_listeners has unexpected size % instead of 4", size_of(type_of(sg_desc.max_commit_listeners)));
+    assert(((cast(*void)(*instance.disable_validation)) - cast(*void)(*instance)) == 44, "sg_desc.disable_validation has unexpected offset % instead of 44", ((cast(*void)(*instance.disable_validation)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_desc.disable_validation)) == 1, "sg_desc.disable_validation has unexpected size % instead of 1", size_of(type_of(sg_desc.disable_validation)));
+    assert(((cast(*void)(*instance.allocator)) - cast(*void)(*instance)) == 48, "sg_desc.allocator has unexpected offset % instead of 48", ((cast(*void)(*instance.allocator)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_desc.allocator)) == 24, "sg_desc.allocator has unexpected size % instead of 24", size_of(type_of(sg_desc.allocator)));
+    assert(((cast(*void)(*instance.logger)) - cast(*void)(*instance)) == 72, "sg_desc.logger has unexpected offset % instead of 72", ((cast(*void)(*instance.logger)) - cast(*void)(*instance)));
+    assert(size_of(type_of(sg_desc.logger)) == 16, "sg_desc.logger has unexpected size % instead of 16", size_of(type_of(sg_desc.logger)));
+    assert(((cast(*void)(*instance._context)) - cast(*void)(*instance)) == 88, "sg_desc._context has unexpected offset % instead of 88", ((cast(*void)(*instance._context)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_desc._context)) == 184, "sg_desc._context has unexpected size % instead of 184", size_of(type_of(sg_desc._context)));
-    assert(((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)) == 224, "sg_desc._end_canary has unexpected offset % instead of 224", ((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)));
+    assert(((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)) == 272, "sg_desc._end_canary has unexpected offset % instead of 272", ((cast(*void)(*instance._end_canary)) - cast(*void)(*instance)));
     assert(size_of(type_of(sg_desc._end_canary)) == 4, "sg_desc._end_canary has unexpected size % instead of 4", size_of(type_of(sg_desc._end_canary)));
-    assert(size_of(sg_desc) == 232, "sg_desc has size % instead of 232", size_of(sg_desc));
+    assert(size_of(sg_desc) == 280, "sg_desc has size % instead of 280", size_of(sg_desc));
 }
 
 /* setup and misc functions */
@@ -2586,6 +3090,8 @@ sg_reset_state_cache :: () -> void #foreign sokol_gfx;
 sg_install_trace_hooks :: (trace_hooks: *sg_trace_hooks) -> sg_trace_hooks #foreign sokol_gfx;
 sg_push_debug_group :: (name: *u8) -> void #foreign sokol_gfx;
 sg_pop_debug_group :: () -> void #foreign sokol_gfx;
+sg_add_commit_listener :: (listener: sg_commit_listener) -> bool #foreign sokol_gfx;
+sg_remove_commit_listener :: (listener: sg_commit_listener) -> bool #foreign sokol_gfx;
 
 /* resource creation, destruction and updating */
 sg_make_buffer :: (desc: *sg_buffer_desc) -> sg_buffer #foreign sokol_gfx;
@@ -2602,6 +3108,7 @@ sg_update_buffer :: (buf: sg_buffer, data: *sg_range) -> void #foreign sokol_gfx
 sg_update_image :: (img: sg_image, data: *sg_image_data) -> void #foreign sokol_gfx;
 sg_append_buffer :: (buf: sg_buffer, data: *sg_range) -> s32 #foreign sokol_gfx;
 sg_query_buffer_overflow :: (buf: sg_buffer) -> bool #foreign sokol_gfx;
+sg_query_buffer_will_overflow :: (buf: sg_buffer, size: size_t) -> bool #foreign sokol_gfx;
 
 /* rendering functions */
 sg_begin_default_pass :: (pass_action: *sg_pass_action, width: s32, height: s32) -> void #foreign sokol_gfx;
@@ -2639,6 +3146,13 @@ sg_query_shader_info :: (shd: sg_shader) -> sg_shader_info #foreign sokol_gfx;
 sg_query_pipeline_info :: (pip: sg_pipeline) -> sg_pipeline_info #foreign sokol_gfx;
 sg_query_pass_info :: (pass: sg_pass) -> sg_pass_info #foreign sokol_gfx;
 
+/* get desc structs matching a specific resource (NOTE that not all creation attributes may be provided) */
+sg_query_buffer_desc :: (buf: sg_buffer) -> sg_buffer_desc #foreign sokol_gfx;
+sg_query_image_desc :: (img: sg_image) -> sg_image_desc #foreign sokol_gfx;
+sg_query_shader_desc :: (shd: sg_shader) -> sg_shader_desc #foreign sokol_gfx;
+sg_query_pipeline_desc :: (pip: sg_pipeline) -> sg_pipeline_desc #foreign sokol_gfx;
+sg_query_pass_desc :: (pass: sg_pass) -> sg_pass_desc #foreign sokol_gfx;
+
 /* get resource creation desc struct with their default values replaced */
 sg_query_buffer_defaults :: (desc: *sg_buffer_desc) -> sg_buffer_desc #foreign sokol_gfx;
 sg_query_image_defaults :: (desc: *sg_image_desc) -> sg_image_desc #foreign sokol_gfx;
@@ -2652,26 +3166,26 @@ sg_alloc_image :: () -> sg_image #foreign sokol_gfx;
 sg_alloc_shader :: () -> sg_shader #foreign sokol_gfx;
 sg_alloc_pipeline :: () -> sg_pipeline #foreign sokol_gfx;
 sg_alloc_pass :: () -> sg_pass #foreign sokol_gfx;
-sg_dealloc_buffer :: (buf_id: sg_buffer) -> void #foreign sokol_gfx;
-sg_dealloc_image :: (img_id: sg_image) -> void #foreign sokol_gfx;
-sg_dealloc_shader :: (shd_id: sg_shader) -> void #foreign sokol_gfx;
-sg_dealloc_pipeline :: (pip_id: sg_pipeline) -> void #foreign sokol_gfx;
-sg_dealloc_pass :: (pass_id: sg_pass) -> void #foreign sokol_gfx;
-sg_init_buffer :: (buf_id: sg_buffer, desc: *sg_buffer_desc) -> void #foreign sokol_gfx;
-sg_init_image :: (img_id: sg_image, desc: *sg_image_desc) -> void #foreign sokol_gfx;
-sg_init_shader :: (shd_id: sg_shader, desc: *sg_shader_desc) -> void #foreign sokol_gfx;
-sg_init_pipeline :: (pip_id: sg_pipeline, desc: *sg_pipeline_desc) -> void #foreign sokol_gfx;
-sg_init_pass :: (pass_id: sg_pass, desc: *sg_pass_desc) -> void #foreign sokol_gfx;
-sg_uninit_buffer :: (buf_id: sg_buffer) -> bool #foreign sokol_gfx;
-sg_uninit_image :: (img_id: sg_image) -> bool #foreign sokol_gfx;
-sg_uninit_shader :: (shd_id: sg_shader) -> bool #foreign sokol_gfx;
-sg_uninit_pipeline :: (pip_id: sg_pipeline) -> bool #foreign sokol_gfx;
-sg_uninit_pass :: (pass_id: sg_pass) -> bool #foreign sokol_gfx;
-sg_fail_buffer :: (buf_id: sg_buffer) -> void #foreign sokol_gfx;
-sg_fail_image :: (img_id: sg_image) -> void #foreign sokol_gfx;
-sg_fail_shader :: (shd_id: sg_shader) -> void #foreign sokol_gfx;
-sg_fail_pipeline :: (pip_id: sg_pipeline) -> void #foreign sokol_gfx;
-sg_fail_pass :: (pass_id: sg_pass) -> void #foreign sokol_gfx;
+sg_dealloc_buffer :: (buf: sg_buffer) -> void #foreign sokol_gfx;
+sg_dealloc_image :: (img: sg_image) -> void #foreign sokol_gfx;
+sg_dealloc_shader :: (shd: sg_shader) -> void #foreign sokol_gfx;
+sg_dealloc_pipeline :: (pip: sg_pipeline) -> void #foreign sokol_gfx;
+sg_dealloc_pass :: (pass: sg_pass) -> void #foreign sokol_gfx;
+sg_init_buffer :: (buf: sg_buffer, desc: *sg_buffer_desc) -> void #foreign sokol_gfx;
+sg_init_image :: (img: sg_image, desc: *sg_image_desc) -> void #foreign sokol_gfx;
+sg_init_shader :: (shd: sg_shader, desc: *sg_shader_desc) -> void #foreign sokol_gfx;
+sg_init_pipeline :: (pip: sg_pipeline, desc: *sg_pipeline_desc) -> void #foreign sokol_gfx;
+sg_init_pass :: (pass: sg_pass, desc: *sg_pass_desc) -> void #foreign sokol_gfx;
+sg_uninit_buffer :: (buf: sg_buffer) -> void #foreign sokol_gfx;
+sg_uninit_image :: (img: sg_image) -> void #foreign sokol_gfx;
+sg_uninit_shader :: (shd: sg_shader) -> void #foreign sokol_gfx;
+sg_uninit_pipeline :: (pip: sg_pipeline) -> void #foreign sokol_gfx;
+sg_uninit_pass :: (pass: sg_pass) -> void #foreign sokol_gfx;
+sg_fail_buffer :: (buf: sg_buffer) -> void #foreign sokol_gfx;
+sg_fail_image :: (img: sg_image) -> void #foreign sokol_gfx;
+sg_fail_shader :: (shd: sg_shader) -> void #foreign sokol_gfx;
+sg_fail_pipeline :: (pip: sg_pipeline) -> void #foreign sokol_gfx;
+sg_fail_pass :: (pass: sg_pass) -> void #foreign sokol_gfx;
 
 /* rendering contexts (optional) */
 sg_setup_context :: () -> sg_context #foreign sokol_gfx;

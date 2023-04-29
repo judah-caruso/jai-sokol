@@ -1,2 +1,3 @@
 [submodule "lib/sokol"]
 	url = https://github.com/floooh/sokol
+	path = lib/sokol
