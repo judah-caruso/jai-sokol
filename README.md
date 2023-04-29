@@ -25,7 +25,9 @@ jai generate.jai - make-lib debug
 
 See: `examples/`
 
+By default, Sokol modules are opt-in:
 
-
-```
+```cpp
+// To only use App and GFX:
+#import "Sokol"(USE_APP=true, USE_GFX=true);
 ```
