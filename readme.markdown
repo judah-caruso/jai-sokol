@@ -6,20 +6,26 @@
 
 ```sh
 git clone --recursive https://github.com/judah-caruso/jai-sokol Sokol
-cd Sokol/your_platform && build.bat
+cd Sokol && jai generate.jai - make-lib
 ```
 
-Sokol can be configured by modifying the `Sokol/c/config.inc` file.
+Sokol can be configured by modifying `LIB_CONFIG` in `generate.jai`
+
+To compile the library (required for binding) and create bindings:
+```sh
+jai generate.jai - make-lib
+```
+
+To generate debug information:
+```sh
+jai generate.jai - make-lib debug
+```
 
 # Usage
 
 See: `examples/`
 
-```c
-// Import everything
-#import "Sokol";
 
-// Import specific "submodules" of Sokol
-#import "Sokol"(.App | .Time); // Would only import sokol_app and sokol_time
-                               // See notes below.
+
+```
 ```

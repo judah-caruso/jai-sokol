@@ -32,7 +32,6 @@ main :: () {
 
 init :: () {
     desc: sg_desc;
-    desc._context = sapp_sgcontext();
     sg_setup(*desc);
 
     shd := sg_make_shader(*simple_shader_desc());
@@ -58,7 +57,7 @@ init :: () {
 
     {
         layout: sg_layout_desc;
-        layout.attrs[0].format = .FLOAT3;
+        layout.attrs[0].format = .SG_VERTEXFORMAT_FLOAT3;
 
         desc: sg_pipeline_desc;
         desc.shader = shd;
@@ -70,7 +69,7 @@ init :: () {
 
     state.pass_action = .{
         colors[0] = .{
-            action = .CLEAR,
+            action = .SG_ACTION_CLEAR,
             value  = .{ 0.2, 0.3, 0.3, 1.0 }
         }
     };
@@ -90,14 +89,19 @@ frame :: () {
 }
 
 event :: (e: *sapp_event) {
-    if e.type == .KEY_DOWN {
-        if e.key_code == .KEYCODE_ESCAPE {
+    if e.type == .SAPP_EVENTTYPE_KEY_DOWN {
+        if e.key_code == .ESCAPE {
             sapp_request_quit();
         }
     }
 }
 
-#load "../../module.jai";
+#import,file "../../module.jai"(USE_APP=true, USE_GFX=true);
 #load "simple_shader.jai";
+
+#if OS == .MACOS {
+    #import "GL";
+    #import "Objective_C";
+}
 
 #import "Basic";

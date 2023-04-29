@@ -1,4 +1,6 @@
 *.exe
 *.pdb
+*.dSYM
+.DS_STORE
 .build/
 

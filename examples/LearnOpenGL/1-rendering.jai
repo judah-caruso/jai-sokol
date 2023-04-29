@@ -1,4 +1,4 @@
-c_context: Context;
+c_ctx: Context;
 
 state: struct {
     pass_action: sg_pass_action;
@@ -7,21 +7,20 @@ state: struct {
 main :: () {
     desc := sapp_desc.{
         init_cb = () #c_call {
-            push_context c_context { init(); }
+            push_context c_ctx { init(); }
         },
         frame_cb = () #c_call {
-            push_context c_context { frame(); }
+            push_context c_ctx { frame(); }
         },
         cleanup_cb = () #c_call {
-            push_context c_context { cleanup(); }
+            push_context c_ctx { cleanup(); }
         },
         event_cb = (e: *sapp_event) #c_call {
-            push_context c_context { event(e); }
+            push_context c_ctx { event(e); }
         },
 
         width =  800,
         height = 600,
-        gl_force_gles2 = true,
         window_title = "Rendering - LearnOpenGL"
     };
 
@@ -30,12 +29,11 @@ main :: () {
 
 init :: () {
     desc: sg_desc;
-    desc._context = sapp_sgcontext();
     sg_setup(*desc);
 
     state.pass_action = .{
         colors[0] = .{
-            action = .CLEAR,
+            action = .SG_ACTION_CLEAR,
             value  = .{ 0.2, 0.3, 0.3, 1.0 }
         }
     };
@@ -52,12 +50,16 @@ frame :: () {
 }
 
 event :: (e: *sapp_event) {
-    if e.type == .KEY_DOWN {
-        if e.key_code == .KEYCODE_ESCAPE {
+    if e.type == .SAPP_EVENTTYPE_KEY_DOWN {
+        if e.key_code == .ESCAPE {
             sapp_request_quit();
         }
     }
 }
 
-#load "../../module.jai";
+#import,file "../../module.jai"(USE_APP=true, USE_GFX=true);
+
+#import "GL";
+#import "Objective_C";
+
 #import "Basic";

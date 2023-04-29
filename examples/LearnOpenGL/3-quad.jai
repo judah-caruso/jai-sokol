@@ -32,7 +32,6 @@ main :: () {
 
 init :: () {
     desc: sg_desc;
-    desc._context = sapp_sgcontext();
     sg_setup(*desc);
 
     shd := sg_make_shader(*simple_shader_desc());
@@ -67,7 +66,7 @@ init :: () {
         range.size = indices.count * size_of(u16);
 
         desc: sg_buffer_desc;
-        desc.type  = .INDEXBUFFER;
+        desc.type  = .SG_BUFFERTYPE_INDEXBUFFER;
         desc.data  = range;
         desc.label = "quad-indices";
 
@@ -77,19 +76,19 @@ init :: () {
     {
         desc: sg_pipeline_desc;
         desc.shader     = shd;
-        desc.index_type = .UINT16;
         desc.label      = "quad-pipeline";
+        desc.index_type = .SG_INDEXTYPE_UINT16;
 
         desc.layout = .{
-            attrs[0].format = .FLOAT3,
+            attrs[0].format = .SG_VERTEXFORMAT_FLOAT3,
         };
 
         state.pipeline = sg_make_pipeline(*desc);
     }
 
     state.pass_action = .{
-        colors[0] = .{
-            action = .CLEAR,
+        colors[0]  = .{
+            action = .SG_ACTION_CLEAR,
             value  = .{ 0.2, 0.3, 0.3, 1.0 }
         }
     };
@@ -109,14 +108,19 @@ frame :: () {
 }
 
 event :: (e: *sapp_event) {
-    if e.type == .KEY_DOWN {
-        if e.key_code == .KEYCODE_ESCAPE {
+    if e.type == .SAPP_EVENTTYPE_KEY_DOWN {
+        if e.key_code == .ESCAPE {
             sapp_request_quit();
         }
     }
 }
 
-#load "../../module.jai";
+#import,file "../../module.jai"(USE_APP=true, USE_GFX=true);
 #load "simple_shader.jai";
+
+#if OS == .MACOS {
+    #import "GL";
+    #import "Objective_C";
+}
 
 #import "Basic";
