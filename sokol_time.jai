@@ -10,5 +10,8 @@ stm_us                           :: (ticks: u64) -> float64                 #for
 stm_ns                           :: (ticks: u64) -> float64                 #foreign sokol_time;
 
 #if OS == .WINDOWS {
-    sokol_time :: #foreign_library,no_dll "win/sokol_time";
+    sokol_time :: #library,no_dll "win/sokol_time";
+}
+else #if OS == .MACOS {
+    sokol_time :: #library,no_dll "mac/sokol_time";
 }

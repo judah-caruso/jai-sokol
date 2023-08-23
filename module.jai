@@ -21,6 +21,7 @@ Sokol_Modules :: enum_flags {
     #load "sokol_gfx.jai";
 
     #if modules & .App {
+        #scope_export;
         sapp_sgcontext :: () -> sg_context_desc {
             desc: sg_context_desc;
 
@@ -48,4 +49,5 @@ Sokol_Modules :: enum_flags {
     }
 }
 
+#scope_module;
 #load "c.jai";
