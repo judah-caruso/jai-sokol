@@ -107,5 +107,8 @@ FONT_C64   :: 4;
 FONT_ORIC  :: 5; 
 
 #if OS == .WINDOWS {
-    sokol_debugtext :: #foreign_library,no_dll "win/sokol_gfx";
+    sokol_debugtext :: #library,no_dll "win/sokol_gfx";
+}
+else #if OS == .MACOS {
+    sokol_debugtext :: #library,no_dll "mac/sokol_gfx";
 }

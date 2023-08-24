@@ -349,10 +349,15 @@ sapp_wgpu_get_depth_stencil_view :: () -> *void #foreign sokol_app;
 sapp_android_get_native_activity :: () -> *void #foreign sokol_app;
 
 #if OS == .WINDOWS {
-    #foreign_system_library "d3d11";
-    #foreign_system_library "gdi32";
-    #foreign_system_library "dxguid";
-    #foreign_system_library "user32";
-    #foreign_system_library "shell32";
-    sokol_app :: #foreign_library,no_dll "win/sokol_app";
+    #system_library "d3d11";
+    #system_library "gdi32";
+    #system_library "dxguid";
+    #system_library "user32";
+    #system_library "shell32";
+    sokol_app :: #library,no_dll "win/sokol_app";
+}
+else #if OS == .MACOS {
+    #system_library "Cocoa";
+    #system_library "OpenGL";
+    sokol_app :: #library,no_dll "mac/sokol_app";
 }

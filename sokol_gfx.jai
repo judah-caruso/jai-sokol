@@ -891,5 +891,8 @@ sg_mtl_device :: () -> *void #foreign sokol_gfx;
 sg_mtl_render_command_encoder :: () -> *void #foreign sokol_gfx;
 
 #if OS == .WINDOWS {
-    sokol_gfx :: #foreign_library,no_dll "win/sokol_gfx";
+    sokol_gfx :: #library,no_dll "win/sokol_gfx";
+}
+else #if OS == .MACOS {
+    sokol_gfx :: #library,no_dll "mac/sokol_gfx";
 }

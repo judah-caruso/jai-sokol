@@ -21,5 +21,8 @@ saudio_expect        :: () -> s32                                #foreign sokol_
 saudio_push          :: (frames: *float, num_frames: s32) -> s32 #foreign sokol_audio; /* push sample frames from main thread, returns number of frames actually pushed */
 
 #if OS == .WINDOWS {
-    sokol_audio :: #foreign_library,no_dll "win/sokol_audio";
+    sokol_audio :: #library,no_dll "win/sokol_audio";
+}
+else #if OS == .MACOS {
+    sokol_audio :: #library,no_dll "mac/sokol_audio";
 }
