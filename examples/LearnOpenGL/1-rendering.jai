@@ -59,5 +59,5 @@ event :: (e: *sapp_event) {
     }
 }
 
-#load "../../module.jai";
+#import,file "../../module.jai";
 #import "Basic";

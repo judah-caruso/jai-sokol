@@ -112,3 +112,6 @@ FONT_ORIC  :: 5;
 else #if OS == .MACOS {
     sokol_debugtext :: #library,no_dll "mac/sokol_gfx";
 }
+else #if OS == .LINUX {
+	sokol_debugtext :: #library,no_dll "linux/sokol_gfx";
+}

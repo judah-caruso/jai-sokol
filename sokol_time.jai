@@ -15,3 +15,6 @@ stm_ns                           :: (ticks: u64) -> float64                 #for
 else #if OS == .MACOS {
     sokol_time :: #library,no_dll "mac/sokol_time";
 }
+else #if OS == .LINUX {
+	sokol_time :: #library,no_dll "linux/sokol_time";
+}

@@ -97,7 +97,7 @@ event :: (e: *sapp_event) {
     }
 }
 
-#load "../../module.jai";
 #load "simple_shader.jai";
 
+#import,file "../../module.jai";
 #import "Basic";

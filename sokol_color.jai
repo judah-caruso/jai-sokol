@@ -304,3 +304,6 @@ sg_color_multiply     :: (color: *sg_color, scale: c.float) -> sg_color         
 else #if OS == .MACOS {
     sokol_color :: #library,no_dll "mac/sokol_gfx";
 }
+else #if OS == .LINUX {
+	sokol_color :: #library,no_dll "linux/sokol_gfx";
+}

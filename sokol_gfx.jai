@@ -896,3 +896,6 @@ sg_mtl_render_command_encoder :: () -> *void #foreign sokol_gfx;
 else #if OS == .MACOS {
     sokol_gfx :: #library,no_dll "mac/sokol_gfx";
 }
+else #if OS == .LINUX {
+	sokol_gfx :: #library,no_dll "linux/sokol_gfx";
+}
