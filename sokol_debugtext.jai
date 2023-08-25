@@ -19,13 +19,13 @@ sdtx_font_desc_t :: struct {
 }
 
 sdtx_context_desc_t :: struct {
-    char_buf_size : c.int = 4096;  
-    canvas_width  : c.float = 640;  
-    canvas_height : c.float = 400; 
-    tab_width     : c.int = 4;         
+    char_buf_size : c.int = 4096;
+    canvas_width  : c.float = 640;
+    canvas_height : c.float = 400;
+    tab_width     : c.int = 4;
     color_format  : sg_pixel_format;
     depth_format  : sg_pixel_format;
-    sample_count  : c.int;          
+    sample_count  : c.int;
 }
 
 sdtx_desc_t :: struct {
@@ -53,12 +53,12 @@ sdtx_destroy_context :: (ctx: sdtx_context)                          #foreign so
 sdtx_set_context     :: (ctx: sdtx_context)                          #foreign sokol_debugtext;
 sdtx_get_context     :: () -> sdtx_context                           #foreign sokol_debugtext;
 
-sdtx_draw   :: ()                       #foreign sokol_debugtext; // draw and rewind the current context 
-sdtx_font   :: (font_index: c.int)      #foreign sokol_debugtext; // switch to a different font 
-sdtx_canvas :: (w: c.float, h: c.float) #foreign sokol_debugtext; // set a new virtual canvas size in screen pixels 
-sdtx_origin :: (x: c.float, y: c.float) #foreign sokol_debugtext; // set a new origin in character grid coordinates 
+sdtx_draw   :: ()                       #foreign sokol_debugtext; // draw and rewind the current context
+sdtx_font   :: (font_index: c.int)      #foreign sokol_debugtext; // switch to a different font
+sdtx_canvas :: (w: c.float, h: c.float) #foreign sokol_debugtext; // set a new virtual canvas size in screen pixels
+sdtx_origin :: (x: c.float, y: c.float) #foreign sokol_debugtext; // set a new origin in character grid coordinates
 
-// cursor movement functions (relative to origin in character grid coordinates) 
+// cursor movement functions (relative to origin in character grid coordinates)
 sdtx_home   :: ()                        #foreign sokol_debugtext;
 sdtx_pos    :: (x: c.float, y: c.float)  #foreign sokol_debugtext;
 sdtx_pos_x  :: (x: c.float)              #foreign sokol_debugtext;
@@ -104,7 +104,7 @@ FONT_KC854 :: 1;
 FONT_Z1013 :: 2;
 FONT_CPC   :: 3;
 FONT_C64   :: 4;
-FONT_ORIC  :: 5; 
+FONT_ORIC  :: 5;
 
 #if OS == .WINDOWS {
     sokol_debugtext :: #library,no_dll "win/sokol_gfx";
