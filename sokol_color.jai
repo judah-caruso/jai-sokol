@@ -294,9 +294,9 @@ SG_YELLOW_GREEN_RGBA32        :: 0x9ACD32FF; // Yellow Green color { R:154, G:20
 
 sg_make_color_4b      :: (r: u8, g: u8, b: u8, a: u8) -> sg_color                              #foreign sokol_color;
 sg_make_color_1i      :: (rgba: u32) -> sg_color                                               #foreign sokol_color;
-sg_color_lerp         :: (color_a: *sg_color, color_b: *sg_color, amount: c.float) -> sg_color #foreign sokol_color;
-sg_color_lerp_precise :: (color_a: *sg_color, color_b: *sg_color, amount: c.float) -> sg_color #foreign sokol_color;
-sg_color_multiply     :: (color: *sg_color, scale: c.float) -> sg_color                        #foreign sokol_color;
+sg_color_lerp         :: (color_a: *sg_color, color_b: *sg_color, amount: c.FLOAT) -> sg_color #foreign sokol_color;
+sg_color_lerp_precise :: (color_a: *sg_color, color_b: *sg_color, amount: c.FLOAT) -> sg_color #foreign sokol_color;
+sg_color_multiply     :: (color: *sg_color, scale: c.FLOAT) -> sg_color                        #foreign sokol_color;
 
 #if OS == .WINDOWS {
     sokol_color :: #library,no_dll "win/sokol_gfx";

@@ -9,7 +9,7 @@ SDTX_DEFAULT_CONTEXT :: sdtx_context.{ 0x00010001 };
 
 sdtx_range :: struct {
     ptr  : *void;
-    size : c.size_t;
+    size : c.SIZE_T;
 };
 
 sdtx_font_desc_t :: struct {
@@ -19,18 +19,18 @@ sdtx_font_desc_t :: struct {
 }
 
 sdtx_context_desc_t :: struct {
-    char_buf_size : c.int = 4096;
-    canvas_width  : c.float = 640;
-    canvas_height : c.float = 400;
-    tab_width     : c.int = 4;
+    char_buf_size : c.INT = 4096;
+    canvas_width  : c.FLOAT = 640;
+    canvas_height : c.FLOAT = 400;
+    tab_width     : c.INT = 4;
     color_format  : sg_pixel_format;
     depth_format  : sg_pixel_format;
-    sample_count  : c.int;
+    sample_count  : c.INT;
 }
 
 sdtx_desc_t :: struct {
-    context_pool_size : c.int = 8;                        // max number of rendering contexts that can be created, default: 8
-    printf_buf_size   : c.int = 4096;                     // size of internal buffer for snprintf(), default: 4096
+    context_pool_size : c.INT = 8;                        // max number of rendering contexts that can be created, default: 8
+    printf_buf_size   : c.INT = 4096;                     // size of internal buffer for snprintf(), default: 4096
     fonts             : [SDTX_MAX_FONTS]sdtx_font_desc_t; // up to 8 fonts descriptions
     _context          : sdtx_context_desc_t;              // the default context creation parameters
 }
@@ -54,35 +54,35 @@ sdtx_set_context     :: (ctx: sdtx_context)                          #foreign so
 sdtx_get_context     :: () -> sdtx_context                           #foreign sokol_debugtext;
 
 sdtx_draw   :: ()                       #foreign sokol_debugtext; // draw and rewind the current context
-sdtx_font   :: (font_index: c.int)      #foreign sokol_debugtext; // switch to a different font
-sdtx_canvas :: (w: c.float, h: c.float) #foreign sokol_debugtext; // set a new virtual canvas size in screen pixels
-sdtx_origin :: (x: c.float, y: c.float) #foreign sokol_debugtext; // set a new origin in character grid coordinates
+sdtx_font   :: (font_index: c.INT)      #foreign sokol_debugtext; // switch to a different font
+sdtx_canvas :: (w: c.FLOAT, h: c.FLOAT) #foreign sokol_debugtext; // set a new virtual canvas size in screen pixels
+sdtx_origin :: (x: c.FLOAT, y: c.FLOAT) #foreign sokol_debugtext; // set a new origin in character grid coordinates
 
 // cursor movement functions (relative to origin in character grid coordinates)
 sdtx_home   :: ()                        #foreign sokol_debugtext;
-sdtx_pos    :: (x: c.float, y: c.float)  #foreign sokol_debugtext;
-sdtx_pos_x  :: (x: c.float)              #foreign sokol_debugtext;
-sdtx_pos_y  :: (y: c.float)              #foreign sokol_debugtext;
-sdtx_move   :: (dx: c.float, y: c.float) #foreign sokol_debugtext;
-sdtx_move_x :: (dx: c.float)             #foreign sokol_debugtext;
-sdtx_move_y :: (dy: c.float)             #foreign sokol_debugtext;
+sdtx_pos    :: (x: c.FLOAT, y: c.FLOAT)  #foreign sokol_debugtext;
+sdtx_pos_x  :: (x: c.FLOAT)              #foreign sokol_debugtext;
+sdtx_pos_y  :: (y: c.FLOAT)              #foreign sokol_debugtext;
+sdtx_move   :: (dx: c.FLOAT, y: c.FLOAT) #foreign sokol_debugtext;
+sdtx_move_x :: (dx: c.FLOAT)             #foreign sokol_debugtext;
+sdtx_move_y :: (dy: c.FLOAT)             #foreign sokol_debugtext;
 sdtx_crlf   :: ()                        #foreign sokol_debugtext;
 
 // set the current text color
 sdtx_color3b :: (r: u8, g: u8, b: u8)                            #foreign sokol_debugtext; // RGB 0..255, A=255
-sdtx_color3f :: (r: c.float, g: c.float, b: c.float)             #foreign sokol_debugtext; // RGB 0.0f..1.0f, A=1.0f
+sdtx_color3f :: (r: c.FLOAT, g: c.FLOAT, b: c.FLOAT)             #foreign sokol_debugtext; // RGB 0.0f..1.0f, A=1.0f
 sdtx_color4b :: (r: u8, g: u8, b: u8, a: u8)                     #foreign sokol_debugtext; // RGBA 0..255
-sdtx_color4f :: (r: c.float, g: c.float, b: c.float, a: c.float) #foreign sokol_debugtext; // RGBA 0.0f..1.0f
+sdtx_color4f :: (r: c.FLOAT, g: c.FLOAT, b: c.FLOAT, a: c.FLOAT) #foreign sokol_debugtext; // RGBA 0.0f..1.0f
 sdtx_color1i :: (rgba: u32)                                      #foreign sokol_debugtext; // ABGR 0xAABBGGRR
 
 // text rendering
-sdtx_putc :: (chr: c.char)              #foreign sokol_debugtext;
-sdtx_puts :: (str: *c.char)             #foreign sokol_debugtext; // does NOT append newline!
-sdtx_putr :: (str: *c.char, len: c.int) #foreign sokol_debugtext; // 'put range', also stops at zero-char
+sdtx_putc :: (chr: c.CHAR)              #foreign sokol_debugtext;
+sdtx_puts :: (str: *c.CHAR)             #foreign sokol_debugtext; // does NOT append newline!
+sdtx_putr :: (str: *c.CHAR, len: c.INT) #foreign sokol_debugtext; // 'put range', also stops at zero-char
 
 // @Todo(Judah): Not sure how to bind these right now.
-// sdtx_printf  :: (const char* fmt, ...) SOKOL_DEBUGTEXT_PRINTF_ATTR -> c.int;
-// sdtx_vprintf :: (const char* fmt, va_list args) -> c.int;
+// sdtx_printf  :: (const char* fmt, ...) SOKOL_DEBUGTEXT_PRINTF_ATTR -> c.INT;
+// sdtx_vprintf :: (const char* fmt, va_list args) -> c.INT;
 
 // Utilities
 
