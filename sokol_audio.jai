@@ -26,3 +26,6 @@ saudio_push          :: (frames: *float, num_frames: s32) -> s32 #foreign sokol_
 else #if OS == .MACOS {
     sokol_audio :: #library,no_dll "mac/sokol_audio";
 }
+else #if OS == .LINUX {
+	sokol_audio :: #library,no_dll "linux/sokol_audio";
+}

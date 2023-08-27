@@ -102,7 +102,6 @@ main :: () {
 }
 
 
-#load "../../module.jai";
-
+#import,file "../../module.jai";
 #import "Math";
 #import "Basic";
