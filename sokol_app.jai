@@ -361,3 +361,10 @@ else #if OS == .MACOS {
     #system_library "OpenGL";
     sokol_app :: #library,no_dll "mac/sokol_app";
 }
+else #if OS == .LINUX {
+    #system_library "libXcursor";
+    #system_library "libX11";
+    #system_library "libXi";
+    #system_library "libGL";
+    sokol_app :: #library,no_dll "linux/sokol_app";
+}
