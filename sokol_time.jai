@@ -16,5 +16,5 @@ else #if OS == .MACOS {
     sokol_time :: #library,no_dll "mac/sokol_time";
 }
 else #if OS == .LINUX {
-	sokol_time :: #library,no_dll "linux/sokol_time";
+    sokol_time :: #library,no_dll "linux/sokol_time";
 }

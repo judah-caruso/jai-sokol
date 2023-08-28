@@ -6,9 +6,10 @@ Sokol_Modules :: enum_flags {
     Audio;
     Color;
     DebugText;
+    Fetch;
 }
 
-#module_parameters(modules := Sokol_Modules.App | .Gfx | .Time | .Audio | .Color | .DebugText);
+#module_parameters(modules := Sokol_Modules.App | .Gfx | .Time | .Audio | .Color | .DebugText | .Fetch);
 
 #scope_module;
 #if modules & .App       #load "sokol_app.jai";
@@ -16,6 +17,7 @@ Sokol_Modules :: enum_flags {
 #if modules & .Audio     #load "sokol_audio.jai";
 #if modules & .DebugText #load "sokol_debugtext.jai";
 #if modules & .Color     #load "sokol_color.jai";
+#if modules & .Fetch     #load "sokol_fetch.jai";
 
 #if modules & .Gfx {
     #load "sokol_gfx.jai";

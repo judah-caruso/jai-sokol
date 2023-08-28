@@ -13,7 +13,7 @@ SG_MAX_SHADERSTAGE_BUFFERS :: 8;
 SG_MAX_SHADERSTAGE_IMAGES  :: 12;
 SG_MAX_SHADERSTAGE_UBS     :: 4;
 SG_MAX_UB_MEMBERS          :: 16;
-SG_MAX_VERTEX_ATTRIBUTES   :: 16; /* NOTE: actual max vertex attrs can be less on GLES2, see sg_limits! */
+SG_MAX_VERTEX_ATTRIBUTES   :: 16; // NOTE: actual max vertex attrs can be less on GLES2, see sg_limits!
 SG_MAX_MIPMAPS             :: 16;
 SG_MAX_TEXTUREARRAY_LAYERS :: 128;
 
@@ -44,7 +44,7 @@ sg_backend :: enum u32 {
 }
 
 sg_pixel_format :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     NONE;
 
     R8;
@@ -164,7 +164,7 @@ sg_resource_state :: enum u32 {
 }
 
 sg_usage :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     IMMUTABLE;
     DYNAMIC;
     STREAM;
@@ -172,14 +172,14 @@ sg_usage :: enum u32 {
 }
 
 sg_buffer_type :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     VERTEXBUFFER;
     INDEXBUFFER;
     _FORCE_U32 :: 0x7FFFFFFF;
 }
 
 sg_index_type :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     NONE;
     UINT16;
     UINT32;
@@ -187,7 +187,7 @@ sg_index_type :: enum u32 {
 }
 
 sg_image_type :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     _2D;
     CUBE;
     _3D;
@@ -196,7 +196,7 @@ sg_image_type :: enum u32 {
 }
 
 sg_sampler_type :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     FLOAT;
     SINT;
     UINT;
@@ -220,7 +220,7 @@ sg_shader_stage :: enum u32 {
 }
 
 sg_primitive_type :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     POINTS;
     LINES;
     LINE_STRIP;
@@ -230,7 +230,7 @@ sg_primitive_type :: enum u32 {
 }
 
 sg_filter :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     NEAREST;
     LINEAR;
     NEAREST_MIPMAP_NEAREST;
@@ -241,7 +241,7 @@ sg_filter :: enum u32 {
 }
 
 sg_wrap :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     REPEAT;
     CLAMP_TO_EDGE;
     CLAMP_TO_BORDER;
@@ -250,7 +250,7 @@ sg_wrap :: enum u32 {
 }
 
 sg_border_color :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     TRANSPARENT_BLACK;
     OPAQUE_BLACK;
     OPAQUE_WHITE;
@@ -278,7 +278,7 @@ sg_vertex_format :: enum u32 {
 }
 
 sg_vertex_step :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     PER_VERTEX;
     PER_INSTANCE;
     _FORCE_U32 :: 0x7FFFFFFF;
@@ -295,7 +295,7 @@ sg_uniform_type :: enum u32 {
 }
 
 sg_cull_mode :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     NONE;
     FRONT;
     BACK;
@@ -303,14 +303,14 @@ sg_cull_mode :: enum u32 {
 }
 
 sg_face_winding :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     CCW;
     CW;
     _FORCE_U32 :: 0x7FFFFFFF;
 }
 
 sg_compare_func :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     NEVER;
     LESS;
     EQUAL;
@@ -323,7 +323,7 @@ sg_compare_func :: enum u32 {
 }
 
 sg_stencil_op :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     KEEP;
     ZERO;
     REPLACE;
@@ -336,7 +336,7 @@ sg_stencil_op :: enum u32 {
 }
 
 sg_blend_factor :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     ZERO;
     ONE;
     SRC_COLOR;
@@ -356,7 +356,7 @@ sg_blend_factor :: enum u32 {
 }
 
 sg_blend_op :: enum u32 {
-    _DEFAULT; /* value 0 reserved for default-init */
+    _DEFAULT; // value 0 reserved for default-init
     ADD;
     SUBTRACT;
     REVERSE_SUBTRACT;
@@ -364,8 +364,8 @@ sg_blend_op :: enum u32 {
 }
 
 sg_color_mask :: enum u32 {
-    _DEFAULT   :: 0;     /* value 0 reserved for default-init */
-    NONE       :: 0x10;  /* special value for 'all channels disabled */
+    _DEFAULT   :: 0;     // value 0 reserved for default-init
+    NONE       :: 0x10;  // special value for 'all channels disabled
     R          :: 0x1;
     G          :: 0x2;
     RG         :: 0x3;
@@ -433,10 +433,10 @@ sg_buffer_desc :: struct {
     usage         : sg_usage;
     data          : sg_range;
     label         : *u8;
-    gl_buffers    : [SG_NUM_INFLIGHT_FRAMES]u32;   /* GL specific */
-    mtl_buffers   : [SG_NUM_INFLIGHT_FRAMES]*void; /* Metal specific */
-    d3d11_buffer  : *void;                         /* D3D11 specific */
-    wgpu_buffer   : *void;                         /* WebGPU specific */
+    gl_buffers    : [SG_NUM_INFLIGHT_FRAMES]u32;   // GL specific
+    mtl_buffers   : [SG_NUM_INFLIGHT_FRAMES]*void; // Metal specific
+    d3d11_buffer  : *void;                         // D3D11 specific
+    wgpu_buffer   : *void;                         // WebGPU specific
     _end_canary   : u32;
 }
 
@@ -468,18 +468,18 @@ sg_image_desc :: struct {
     data           : sg_image_data;
     label          : *u8;
 
-    /* GL specific */
+    // GL specific
     gl_textures       : [SG_NUM_INFLIGHT_FRAMES]u32;
     gl_texture_target : u32;
 
-    /* Metal specific */
+    // Metal specific
     mtl_textures: [SG_NUM_INFLIGHT_FRAMES]*void;
 
-    /* D3D11 specific */
+    // D3D11 specific
     d3d11_texture              : *void;
     d3d11_shader_resource_view : *void;
 
-    /* WebGPU specific */
+    // WebGPU specific
     wgpu_texture : *void;
     _end_canary  : u32;
 }
@@ -611,7 +611,7 @@ sg_pipeline_desc :: struct {
 sg_pass_attachment_desc :: struct {
     image     : sg_image;
     mip_level : s32;
-    slice     : s32; /* cube texture: face; array texture: layer; 3D texture: slice */
+    slice     : s32; // cube texture: face; array texture: layer; 3D texture: slice
 }
 
 sg_pass_desc :: struct {
@@ -687,40 +687,40 @@ sg_trace_hooks :: struct {
 }
 
 sg_slot_info :: struct {
-    state  : sg_resource_state; /* the current state of this resource slot */
-    res_id : u32;               /* type-neutral resource if (e.g. sg_buffer.id) */
-    ctx_id : u32;               /* the context this resource belongs to */
+    state  : sg_resource_state; // the current state of this resource slot
+    res_id : u32;               // type-neutral resource if (e.g. sg_buffer.id)
+    ctx_id : u32;               // the context this resource belongs to
 }
 
 sg_buffer_info :: struct {
-    slot               : sg_slot_info; /* resource pool slot info */
-    update_frame_index : u32;          /* frame index of last sg_update_buffer() */
-    append_frame_index : u32;          /* frame index of last sg_append_buffer() */
-    append_pos         : s32;          /* current position in buffer for sg_append_buffer() */
-    append_overflow    : bool;         /* is buffer in overflow state (due to sg_append_buffer) */
-    num_slots          : s32;          /* number of renaming-slots for dynamically updated buffers */
-    active_slot        : s32;          /* currently active write-slot for dynamically updated buffers */
+    slot               : sg_slot_info; // resource pool slot info
+    update_frame_index : u32;          // frame index of last sg_update_buffer()
+    append_frame_index : u32;          // frame index of last sg_append_buffer()
+    append_pos         : s32;          // current position in buffer for sg_append_buffer()
+    append_overflow    : bool;         // is buffer in overflow state (due to sg_append_buffer)
+    num_slots          : s32;          // number of renaming-slots for dynamically updated buffers
+    active_slot        : s32;          // currently active write-slot for dynamically updated buffers
 }
 
 sg_image_info :: struct {
-    slot            : sg_slot_info; /* resource pool slot info */
-    upd_frame_index : u32;          /* frame index of last sg_update_image() */
-    num_slots       : s32;          /* number of renaming-slots for dynamically updated images */
-    active_slot     : s32;          /* currently active write-slot for dynamically updated images */
-    width           : s32;          /* image width */
-    height          : s32;          /* image height */
+    slot            : sg_slot_info; // resource pool slot info
+    upd_frame_index : u32;          // frame index of last sg_update_image()
+    num_slots       : s32;          // number of renaming-slots for dynamically updated images
+    active_slot     : s32;          // currently active write-slot for dynamically updated images
+    width           : s32;          // image width
+    height          : s32;          // image height
 }
 
 sg_shader_info :: struct {
-    slot: sg_slot_info; /* resoure pool slot info */
+    slot: sg_slot_info; // resoure pool slot info
 }
 
 sg_pipeline_info :: struct {
-    slot: sg_slot_info; /* resource pool slot info */
+    slot: sg_slot_info; // resource pool slot info
 }
 
 sg_pass_info :: struct {
-    slot: sg_slot_info; /* resource pool slot info */
+    slot: sg_slot_info; // resource pool slot info
 }
 
 sg_gl_context_desc :: struct {
@@ -747,12 +747,12 @@ sg_d3d11_context_desc :: struct {
 }
 
 sg_wgpu_context_desc :: struct {
-    device                         : *void;                    /* WGPUDevice */
-    render_view_cb                 : ()      -> *void #c_call; /* returns WGPUTextureView */
+    device                         : *void;                    // WGPUDevice
+    render_view_cb                 : ()      -> *void #c_call; // returns WGPUTextureView
     render_view_userdata_cb        : (*void) -> *void #c_call;
-    resolve_view_cb                : ()      -> *void #c_call; /* returns WGPUTextureView */
+    resolve_view_cb                : ()      -> *void #c_call; // returns WGPUTextureView
     resolve_view_userdata_cb       : (*void) -> *void #c_call;
-    depth_stencil_view_cb          : ()      -> *void #c_call; /* returns WGPUTextureView, must be WGPUTextureFormat_Depth24Plus8 */
+    depth_stencil_view_cb          : ()      -> *void #c_call; // returns WGPUTextureView, must be WGPUTextureFormat_Depth24Plus8
     depth_stencil_view_userdata_cb : (*void) -> *void #c_call;
     user_data                      : *void;
 }
@@ -790,7 +790,7 @@ sg_install_trace_hooks :: (trace_hooks: *sg_trace_hooks) -> sg_trace_hooks #fore
 sg_push_debug_group    :: (name: *u8)                                      #foreign sokol_gfx;
 sg_pop_debug_group     :: ()                                               #foreign sokol_gfx;
 
-/* resource creation, destruction and updating */
+// resource creation, destruction and updating
 sg_make_buffer           :: (desc: *sg_buffer_desc) -> sg_buffer       #foreign sokol_gfx;
 sg_make_image            :: (desc: *sg_image_desc) -> sg_image         #foreign sokol_gfx;
 sg_make_shader           :: (desc: *sg_shader_desc) -> sg_shader       #foreign sokol_gfx;
@@ -806,7 +806,7 @@ sg_update_image          :: (img: sg_image, data: *sg_image_data)      #foreign 
 sg_append_buffer         :: (buf: sg_buffer, data: *sg_range) -> s32   #foreign sokol_gfx;
 sg_query_buffer_overflow :: (buf: sg_buffer) -> bool                   #foreign sokol_gfx;
 
-/* rendering functions */
+// rendering functions
 sg_begin_default_pass  :: (pass_action: *sg_pass_action, width: s32, height: s32)                          #foreign sokol_gfx;
 sg_begin_default_passf :: (pass_action: *sg_pass_action, width: float32, height: float32)                  #foreign sokol_gfx;
 sg_begin_pass          :: (pass: sg_pass, pass_action: *sg_pass_action)                                    #foreign sokol_gfx;
@@ -821,35 +821,35 @@ sg_draw                :: (base_element: s32, num_elements: s32, num_instances: 
 sg_end_pass            :: ()                                                                               #foreign sokol_gfx;
 sg_commit              :: ()                                                                               #foreign sokol_gfx;
 
-/* getting information */
+// getting information
 sg_query_desc        :: () -> sg_desc                                 #foreign sokol_gfx;
 sg_query_backend     :: () -> sg_backend                              #foreign sokol_gfx;
 sg_query_features    :: () -> sg_features                             #foreign sokol_gfx;
 sg_query_limits      :: () -> sg_limits                               #foreign sokol_gfx;
 sg_query_pixelformat :: (fmt: sg_pixel_format) -> sg_pixelformat_info #foreign sokol_gfx;
 
-/* get current state of a resource (INITIAL, ALLOC, VALID, FAILED, INVALID) */
+// get current state of a resource (INITIAL, ALLOC, VALID, FAILED, INVALID)
 sg_query_buffer_state   :: (buf: sg_buffer) -> sg_resource_state   #foreign sokol_gfx;
 sg_query_image_state    :: (img: sg_image) -> sg_resource_state    #foreign sokol_gfx;
 sg_query_shader_state   :: (shd: sg_shader) -> sg_resource_state   #foreign sokol_gfx;
 sg_query_pipeline_state :: (pip: sg_pipeline) -> sg_resource_state #foreign sokol_gfx;
 sg_query_pass_state     :: (pass: sg_pass) -> sg_resource_state    #foreign sokol_gfx;
 
-/* get runtime information about a resource */
+// get runtime information about a resource
 sg_query_buffer_info   :: (buf: sg_buffer) -> sg_buffer_info     #foreign sokol_gfx;
 sg_query_image_info    :: (img: sg_image) -> sg_image_info       #foreign sokol_gfx;
 sg_query_shader_info   :: (shd: sg_shader) -> sg_shader_info     #foreign sokol_gfx;
 sg_query_pipeline_info :: (pip: sg_pipeline) -> sg_pipeline_info #foreign sokol_gfx;
 sg_query_pass_info     :: (pass: sg_pass) -> sg_pass_info        #foreign sokol_gfx;
 
-/* get resource creation desc struct with their default values replaced */
+// get resource creation desc struct with their default values replaced
 sg_query_buffer_defaults   :: (desc: *sg_buffer_desc) -> sg_buffer_desc     #foreign sokol_gfx;
 sg_query_image_defaults    :: (desc: *sg_image_desc) -> sg_image_desc       #foreign sokol_gfx;
 sg_query_shader_defaults   :: (desc: *sg_shader_desc) -> sg_shader_desc     #foreign sokol_gfx;
 sg_query_pipeline_defaults :: (desc: *sg_pipeline_desc) -> sg_pipeline_desc #foreign sokol_gfx;
 sg_query_pass_defaults     :: (desc: *sg_pass_desc) -> sg_pass_desc         #foreign sokol_gfx;
 
-/* separate resource allocation and initialization (for async setup) */
+// separate resource allocation and initialization (for async setup)
 sg_alloc_buffer     :: () -> sg_buffer                                #foreign sokol_gfx;
 sg_alloc_image      :: () -> sg_image                                 #foreign sokol_gfx;
 sg_alloc_shader     :: () -> sg_shader                                #foreign sokol_gfx;
@@ -876,18 +876,18 @@ sg_fail_shader      :: (shd_id: sg_shader)                            #foreign s
 sg_fail_pipeline    :: (pip_id: sg_pipeline)                          #foreign sokol_gfx;
 sg_fail_pass        :: (pass_id: sg_pass)                             #foreign sokol_gfx;
 
-/* rendering contexts (optional) */
+// rendering contexts (optional)
 sg_setup_context    :: () -> sg_context     #foreign sokol_gfx;
 sg_activate_context :: (ctx_id: sg_context) #foreign sokol_gfx;
 sg_discard_context  :: (ctx_id: sg_context) #foreign sokol_gfx;
 
-/* D3D11: return ID3D11Device */
+// D3D11: return ID3D11Device
 sg_d3d11_device :: () -> *void #foreign sokol_gfx;
 
-/* Metal: return __bridge-casted MTLDevice */
+// Metal: return __bridge-casted MTLDevice
 sg_mtl_device :: () -> *void #foreign sokol_gfx;
 
-/* Metal: return __bridge-casted MTLRenderCommandEncoder in current pass (or zero if outside pass) */
+// Metal: return __bridge-casted MTLRenderCommandEncoder in current pass (or zero if outside pass)
 sg_mtl_render_command_encoder :: () -> *void #foreign sokol_gfx;
 
 #if OS == .WINDOWS {
@@ -897,5 +897,5 @@ else #if OS == .MACOS {
     sokol_gfx :: #library,no_dll "mac/sokol_gfx";
 }
 else #if OS == .LINUX {
-	sokol_gfx :: #library,no_dll "linux/sokol_gfx";
+    sokol_gfx :: #library,no_dll "linux/sokol_gfx";
 }

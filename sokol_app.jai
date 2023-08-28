@@ -1,6 +1,6 @@
 _SAPP_MAX_TITLE_LENGTH          :: 128;
 
-/* NOTE: the pixel format values *must* be compatible with sg_pixel_format */
+// NOTE: the pixel format values *must* be compatible with sg_pixel_format
 _SAPP_PIXELFORMAT_RGBA8         :: 23;
 _SAPP_PIXELFORMAT_BGRA8         :: 27;
 _SAPP_PIXELFORMAT_DEPTH         :: 41;
@@ -45,7 +45,7 @@ sapp_desc :: struct {
     max_dropped_file_path_length: s32;  // max length in bytes of a dropped UTF-8 file path (default: 2048)
     icon: sapp_icon_desc;               // the initial window icon to set
 
-    /* backend-specific options */
+    // backend-specific options
     gl_force_gles2                : bool;           // if true, setup GLES2/WebGL even if GLES3/WebGL2 is available
     win32_console_utf8            : bool;           // if true, set the output console codepage to UTF-8
     win32_console_create          : bool;           // if true, attach stdout/stderr to a new console window
@@ -100,11 +100,11 @@ sapp_event_type :: enum u32 {
 sapp_keycode :: enum u32 {
     KEYCODE_INVALID          ::  0;
     KEYCODE_SPACE            :: 32;
-    KEYCODE_APOSTROPHE       :: 39;  /* ' */
-    KEYCODE_COMMA            :: 44;  /* , */
-    KEYCODE_MINUS            :: 45;  /* - */
-    KEYCODE_PERIOD           :: 46;  /* . */
-    KEYCODE_SLASH            :: 47;  /* / */
+    KEYCODE_APOSTROPHE       :: 39;  // '
+    KEYCODE_COMMA            :: 44;  // ,
+    KEYCODE_MINUS            :: 45;  // -
+    KEYCODE_PERIOD           :: 46;  // .
+    KEYCODE_SLASH            :: 47;  // /
     KEYCODE_0                :: 48;
     KEYCODE_1                :: 49;
     KEYCODE_2                :: 50;
@@ -115,8 +115,8 @@ sapp_keycode :: enum u32 {
     KEYCODE_7                :: 55;
     KEYCODE_8                :: 56;
     KEYCODE_9                :: 57;
-    KEYCODE_SEMICOLON        :: 59;  /* ; */
-    KEYCODE_EQUAL            :: 61;  /* = */
+    KEYCODE_SEMICOLON        :: 59;  // ;
+    KEYCODE_EQUAL            :: 61;  // =
     KEYCODE_A                :: 65;
     KEYCODE_B                :: 66;
     KEYCODE_C                :: 67;
@@ -143,12 +143,12 @@ sapp_keycode :: enum u32 {
     KEYCODE_X                :: 88;
     KEYCODE_Y                :: 89;
     KEYCODE_Z                :: 90;
-    KEYCODE_LEFT_BRACKET     :: 91;  /* [ */
-    KEYCODE_BACKSLASH        :: 92;  /* \ */
-    KEYCODE_RIGHT_BRACKET    :: 93;  /* ] */
-    KEYCODE_GRAVE_ACCENT     :: 96;  /* ` */
-    KEYCODE_WORLD_1          :: 161; /* non-US #1 */
-    KEYCODE_WORLD_2          :: 162; /* non-US #2 */
+    KEYCODE_LEFT_BRACKET     :: 91;  // [
+    KEYCODE_BACKSLASH        :: 92;  // \
+    KEYCODE_RIGHT_BRACKET    :: 93;  // ]
+    KEYCODE_GRAVE_ACCENT     :: 96;  // `
+    KEYCODE_WORLD_1          :: 161; // non-US #1
+    KEYCODE_WORLD_2          :: 162; // non-US #2
     KEYCODE_ESCAPE           :: 256;
     KEYCODE_ENTER            :: 257;
     KEYCODE_TAB              :: 258;
@@ -254,7 +254,7 @@ sapp_event :: struct {
     window_width       : s32;                                   // current window- and framebuffer sizes in pixels, always valid
     window_height      : s32;
     framebuffer_width  : s32;                                   // = window_width * dpi_scale
-    framebuffer_height : s32;                                   // = window_height * dpi_scale 
+    framebuffer_height : s32;                                   // = window_height * dpi_scale
 }
 
 sapp_range :: struct {
@@ -269,21 +269,21 @@ sapp_html5_fetch_error :: enum u32 {
 }
 
 sapp_html5_fetch_response :: struct {
-    succeeded    : bool;                    /* true if the loading operation has succeeded */
+    succeeded    : bool;                    // true if the loading operation has succeeded
     error_code   : sapp_html5_fetch_error;
-    file_index   : s32;                     /* index of the dropped file (0..sapp_get_num_dropped_filed()-1) */
-    fetched_size : u32;                     /* size in bytes of loaded data */
-    buffer_ptr   : *void;                   /* pointer to user-provided buffer which contains the loaded data */
-    buffer_size  : u32;                     /* size of user-provided buffer (buffer_size >= fetched_size) */
-    user_data    : *void;                   /* user-provided user data pointer */
+    file_index   : s32;                     // index of the dropped file (0..sapp_get_num_dropped_filed()-1)
+    fetched_size : u32;                     // size in bytes of loaded data
+    buffer_ptr   : *void;                   // pointer to user-provided buffer which contains the loaded data
+    buffer_size  : u32;                     // size of user-provided buffer (buffer_size >= fetched_size)
+    user_data    : *void;                   // user-provided user data pointer
 }
 
 sapp_html5_fetch_request :: struct {
-    dropped_file_index : s32;                                  /* 0..sapp_get_num_dropped_files()-1 */
-    callback           : (*sapp_html5_fetch_response) #c_call; /* response callback function pointer (required) */
-    buffer_ptr         : *void;                                /* pointer to buffer to load data into */
-    buffer_size        : u32;                                  /* size in bytes of buffer */
-    user_data          : *void;                                /* optional userdata pointer */
+    dropped_file_index : s32;                                  // 0..sapp_get_num_dropped_files()-1
+    callback           : (*sapp_html5_fetch_response) #c_call; // response callback function pointer (required)
+    buffer_ptr         : *void;                                // pointer to buffer to load data into
+    buffer_size        : u32;                                  // size in bytes of buffer
+    user_data          : *void;                                // optional userdata pointer
 }
 
 sapp_isvalid      :: () -> bool  #foreign sokol_app;
@@ -365,6 +365,6 @@ else #if OS == .LINUX {
     #system_library "libXcursor";
     #system_library "libX11";
     #system_library "libXi";
-	#system_library "libGL";
-	sokol_app :: #library,no_dll "linux/sokol_app";
+    #system_library "libGL";
+    sokol_app :: #library,no_dll "linux/sokol_app";
 }
