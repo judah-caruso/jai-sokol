@@ -1,6 +1,12 @@
 #!/bin/bash
 
-files=("sokol_app" "sokol_gfx" "sokol_time" "sokol_audio")
+files=(
+	"sokol_app"
+	"sokol_gfx"
+	"sokol_time"
+	"sokol_audio"
+	"sokol_fetch"
+)
 
 for file in ${files[@]}; do
 	echo "Compiling $file..."
