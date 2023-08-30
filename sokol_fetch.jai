@@ -94,3 +94,6 @@ sfetch_continue      :: (h: sfetch_handle_t)                                    
 else #if OS == .MACOS {
     sokol_fetch :: #library,no_dll "mac/sokol_fetch";
 }
+else #if OS == .LINUX {
+	sokol_fetch :: #library,no_dll "linux/sokol_fetch";
+}
