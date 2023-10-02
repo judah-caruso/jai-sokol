@@ -1,17 +1,18 @@
-#scope_export;
-Sokol_Modules :: enum_flags {
-    App;
-    Gfx;
-    Time;
-    Audio;
-    Color;
-    DebugText;
-    Fetch;
-}
+#scope_export
 
-#module_parameters(modules := Sokol_Modules.App | .Gfx | .Time | .Audio | .Color | .DebugText | .Fetch);
+#module_parameters () (modules := Sokol_Modules.App | .Gfx | .Time | .Audio | .Color | .DebugText | .Fetch) {
+    Sokol_Modules :: enum_flags {
+        App;
+        Gfx;
+        Time;
+        Audio;
+        Color;
+        DebugText;
+        Fetch;
+    }
+};
 
-#scope_module;
+#scope_module
 #if modules & .App       #load "sokol_app.jai";
 #if modules & .Time      #load "sokol_time.jai";
 #if modules & .Audio     #load "sokol_audio.jai";
@@ -23,7 +24,7 @@ Sokol_Modules :: enum_flags {
     #load "sokol_gfx.jai";
 
     #if modules & .App {
-        #scope_export;
+        #scope_export
         sapp_sgcontext :: () -> sg_context_desc {
             desc: sg_context_desc;
 
@@ -51,5 +52,5 @@ Sokol_Modules :: enum_flags {
     }
 }
 
-#scope_module;
+#scope_module
 #load "c.jai";
